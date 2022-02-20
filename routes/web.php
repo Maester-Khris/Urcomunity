@@ -20,3 +20,7 @@ Route::get('evts-details','App\Http\Controllers\EventController@voir');
 Route::get('/', function () {
     return view('acceuil');
 });
+
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
