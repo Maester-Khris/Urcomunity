@@ -17,6 +17,7 @@ class CreateMembresTable extends Migration
             $table->increments('id');
             $table->integer('zone_id')->unsigned();
             $table->string("name");
+            $table->string("matricule");
             $table->boolean("deleguate");
             $table->boolean("statut");
             $table->date("registerd_date");

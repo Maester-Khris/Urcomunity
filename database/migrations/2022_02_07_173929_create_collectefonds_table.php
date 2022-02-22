@@ -16,6 +16,7 @@ class CreateCollectefondsTable extends Migration
         Schema::create('collectefonds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('evenement_id')->unsigned();
+            $table->date('date_acceptation');
             $table->integer('delai_envoi_participation');
             $table->integer('montant_cotisation');
             $table->timestamps();

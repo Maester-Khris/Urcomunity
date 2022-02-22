@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateZonesTable extends Migration
+class CreateChatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateZonesTable extends Migration
      */
     public function up()
     {
-        Schema::create('zones', function (Blueprint $table) {
+        Schema::create('chats', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("localisation");
-            $table->string("identifiant");
+            $table->integer('membre_id')->unsigned();
+            $table->text('message');
             $table->timestamps();
+            $table->foreign('membre_id')->references('id')->on('membres')->onDelete('cascade');
         });
     }
 
@@ -28,6 +29,6 @@ class CreateZonesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('zones');
+        Schema::dropIfExists('chats');
     }
 }
