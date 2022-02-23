@@ -11,7 +11,8 @@ class MembreProfileController extends Controller
     //
     public function index()
     {
-        return view('profiles');
+        $membres = Membre::all();
+        return view('profiles', compact('membres'));
     }
 
     public function create(Request $request){

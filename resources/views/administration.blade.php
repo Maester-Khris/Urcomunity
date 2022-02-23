@@ -89,7 +89,9 @@
                                                                   </ul>
                                                             </div>
                                                       </form>
+                                                      <div class="acc-setting" style="border: 1px solid gray">
 
+                                                      </div>
                                                       <form action="{{url('ajouter-membre')}}" method="POST">
                                                             @csrf
                                                             <div class="cp-field">
@@ -145,8 +147,8 @@
                                                             </div>
                                                             <div class="save-stngs pd2">
                                                                   <ul>
-                                                                        <li><button type="submit">Save Setting</button></li>
-                                                                        <li><button type="submit">Restore Setting</button></li>
+                                                                        <li><button type="submit">Ajouter </button></li>
+                                                                        <li><button type="submit">Annuler</button></li>
                                                                   </ul>
                                                             </div>
                                                             <!--save-stngs end-->

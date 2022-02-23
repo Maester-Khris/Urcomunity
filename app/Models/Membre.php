@@ -9,7 +9,12 @@ class Membre extends Model
 {
     use HasFactory;
 
+    protected $appends = ['zone_name'];
     protected $fillable = ['name','matricule','deleguate','statut','registerd_date',] ;
+
+    public function getZoneNameAttribute(){
+      return $this->zone->localisation;
+   }
 
     public function zone()
     {
