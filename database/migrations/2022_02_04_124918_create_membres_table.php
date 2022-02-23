@@ -18,9 +18,10 @@ class CreateMembresTable extends Migration
             $table->integer('zone_id')->unsigned();
             $table->string("name");
             $table->string("matricule");
+            $table->string("telephone");
             $table->boolean("deleguate");
             $table->boolean("statut");
-            $table->date("registerd_date");
+            $table->date("registered_date");
             $table->timestamps();
             $table->foreign('zone_id')->references('id')->on('zones');
         });

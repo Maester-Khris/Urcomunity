@@ -9,7 +9,7 @@ class Membre extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','deleguate','registerd_date'] ;
+    protected $fillable = ['name','matricule','deleguate','statut','registerd_date',] ;
 
     public function zone()
     {

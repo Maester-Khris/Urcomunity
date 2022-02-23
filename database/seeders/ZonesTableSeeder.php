@@ -18,13 +18,13 @@ class ZonesTableSeeder extends Seeder
         DB::table('zones')->insert([
            [
                'id' => 1,
-               'membre_id' => 1,
                'localisation' => 'Melen Carrefour',
+               'identifiant' => 'MEL',
            ],
            [
                'id' => 2,
-               'membre_id' => 3,
-               'localisation' => 'Melen - Miniferme',
+               'localisation' => 'Obili - montéé',
+               'identifiant' => 'OBI',
            ],
        ]);
     }

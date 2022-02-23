@@ -21,6 +21,9 @@ Route::get('/', function () {
     return view('acceuil');
 });
 
+Route::post('ajouter-zone','App\Http\Controllers\ZoneController@create');
+Route::post('ajouter-membre','App\Http\Controllers\MembreProfileController@create');
+
 if (App::environment('production')) {
     URL::forceScheme('https');
 }

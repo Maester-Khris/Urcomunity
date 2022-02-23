@@ -63,41 +63,84 @@
                                                 </div>
                                                 <!--acc-setting end-->
                                           </div>
-
+                                          {{-- new zone and member --}}
                                           <div class="tab-pane fade show" id="nav-entities" role="tabpanel" aria-labelledby="nav-acc-tab">
                                                 <div class="acc-setting">
                                                       <h3>Add Member & Zones</h3>
-
-                                                      <form>
+                                                      <form  action="{{url('ajouter-zone')}}" method="POST">
+                                                            @csrf
                                                             <div class="cp-field">
-                                                                  <h5>location</h5>
+                                                                  <h5>Nom de la zone</h5>
                                                                   <div class="cpp-fiel">
-                                                                        <input type="text" name="old-password" placeholder="Old Password">
+                                                                        <input type="text" name="localisation" placeholder="Nom complet">
+                                                                        <i class="fa fa-lock"></i>
+                                                                  </div>
+                                                            </div>
+                                                            <div class="cp-field">
+                                                                  <h5>Identifiant de la zone</h5>
+                                                                  <div class="cpp-fiel">
+                                                                        <input type="text" name="identifiant" placeholder="Identifiant (03 lettres)">
                                                                         <i class="fa fa-lock"></i>
                                                                   </div>
                                                             </div>
                                                             <div class="save-stngs pd2">
                                                                   <ul>
-                                                                        <li><button type="submit">Save Setting</button></li>
+                                                                        <li><button type="submit">Ajouter</button></li>
                                                                   </ul>
                                                             </div>
                                                       </form>
 
-                                                      <form>
+                                                      <form action="{{url('ajouter-membre')}}" method="POST">
+                                                            @csrf
                                                             <div class="cp-field">
-                                                                  <h5>Member Name</h5>
+                                                                  <h5>Nom du Membre</h5>
                                                                   <div class="cpp-fiel">
-                                                                        <input type="text" name="new-password" placeholder="New Password">
+                                                                        <input type="text" name="name" placeholder="Nom du nouveau membre">
                                                                         <i class="fa fa-lock"></i>
                                                                   </div>
                                                             </div>
                                                             <div class="cp-field">
-                                                                  <h5>Select the zone where the member stay</h5>
+                                                                  <h5>Numero de telephone</h5>
                                                                   <div class="cpp-fiel">
-                                                                        <select id="inputState" class="form-control">
+                                                                        <input type="text" name="telephone" placeholder="Num telephone">
+                                                                        <i class="fa fa-lock"></i>
+                                                                  </div>
+                                                            </div>
+                                                            <div class="cp-field">
+                                                                  <h5>Date d'inscription effective <small>(après payement des frais d'inscription)</small></h5>
+                                                                  <div class="cpp-fiel">
+                                                                        <input type="date" name="registered_date" placeholder="Num telephone">
+                                                                        <i class="fa fa-lock"></i>
+                                                                  </div>
+                                                            </div>
+                                                            <div class="cp-field">
+                                                                  <h5>Selectionner la zone où le membre reside</h5>
+                                                                  <div class="cpp-fiel">
+                                                                        <select id="inputState" class="form-control" name="zone">
                                                                               <option selected>Choose...</option>
-                                                                              <option>...</option>
+                                                                              @foreach($zones as $zone)
+                                                                                <option value="{{$zone}}" > {{ $zone }}</option>
+                                                                              @endforeach
                                                                         </select>
+                                                                  </div>
+                                                            </div>
+                                                            <div class="cp-field">
+                                                               <h5>Est-il delegué de sa zone ?</h5>
+                                                                  <div class="checky-sec">
+                                                                     <div class="fgt-sec" style="margin-right:15px;">
+                                                                           <input type="radio" name="deleguate" id="c1" value="1">
+                                                                           <label for="c1">
+                                                                                 <span></span>
+                                                                           </label>
+                                                                           <small>Oui</small>
+                                                                     </div>
+                                                                     <div class="fgt-sec">
+                                                                           <input type="radio" name="deleguate" id="c2" value="0">
+                                                                           <label for="c2">
+                                                                                 <span></span>
+                                                                           </label>
+                                                                           <small>Non</small>
+                                                                     </div><!--fgt-sec end-->
                                                                   </div>
                                                             </div>
                                                             <div class="save-stngs pd2">
