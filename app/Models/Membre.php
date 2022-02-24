@@ -10,7 +10,7 @@ class Membre extends Model
     use HasFactory;
 
     protected $appends = ['zone_name'];
-    protected $fillable = ['name','matricule','deleguate','statut','registerd_date',] ;
+    protected $fillable = ['name','matricule','deleguate','statut','registerd_date'] ;
 
     public function getZoneNameAttribute(){
       return $this->zone->localisation;
@@ -20,4 +20,9 @@ class Membre extends Model
     {
         return $this->belongsTo(Zone::class);
     }
+
+    public function event()
+      {
+         return $this->hasOne(Evenement::class);
+      }
 }

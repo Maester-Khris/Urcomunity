@@ -1,6 +1,10 @@
 @extends('layouts.app',['title'=>'Manage Site'])
 @push('styles')
       <link rel="stylesheet" type="text/css" href="{{asset('css/admin.css')}}">
+      <link rel="stylesheet" type="text/css" href="{{asset('css/preview.css')}}">
+@endpush
+@push('scripts')
+<script src="{{ asset('/js/preview.js') }}"></script>
 @endpush
 
 @section('content')
@@ -63,6 +67,7 @@
                                                 </div>
                                                 <!--acc-setting end-->
                                           </div>
+
                                           {{-- new zone and member --}}
                                           <div class="tab-pane fade show" id="nav-entities" role="tabpanel" aria-labelledby="nav-acc-tab">
                                                 <div class="acc-setting">
@@ -157,44 +162,57 @@
                                                 <!--acc-setting end-->
                                           </div>
 
+                                          <!-- add event  -->
                                           <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
                                                 <div class="acc-setting">
-                                                      <h3>New Event</h3>
-                                                      <form>
+                                                      <h3>Nouvel Evenement</h3>
+                                                      <form action="{{url('ajouter-evenement')}}" method="POST" enctype="multipart/form-data">
+                                                            {{csrf_field()}}
                                                             <div class="cp-field">
-                                                                  <h5>event's title</h5>
+                                                                  <h5>Ajouter un titre a cet evenement </h5>
                                                                   <div class="cpp-fiel">
-                                                                        <input type="text" name="old-password" placeholder="Old Password">
+                                                                        <input type="text" name="titre" placeholder="Donnez lui un nom">
                                                                         <i class="fa fa-lock"></i>
                                                                   </div>
                                                             </div>
                                                             <div class="cp-field">
-                                                                  <h5>Member concerned</h5>
+                                                                  <h5>Nom du membre concerné par l'evenement</h5>
                                                                   <div class="cpp-fiel">
-                                                                        <input type="text" name="old-password" placeholder="Old Password">
+                                                                        <input type="text" name="membre" placeholder="La personne qui à l'evenement">
                                                                         <i class="fa fa-lock"></i>
                                                                   </div>
                                                             </div>
                                                             <div class="cp-field">
-                                                                  <h5>Select the zone where the event take place</h5>
+                                                                  <h5>Saisir une description de l'evenement</h5>
+                                                                  <textarea name="description"></textarea>
+                                                            </div>
+                                                            <div class="cp-field">
+                                                                  <h5>qualificatif de l'evenemet</h5>
                                                                   <div class="cpp-fiel">
-                                                                        <select id="inputState" class="form-control">
-                                                                              <option selected>Choose...</option>
-                                                                              <option>...</option>
+                                                                        <select id="inputState" class="form-control" name="qualificatif">
+                                                                              <option value="Heureux" selected>Heureux</option>
+                                                                              <option value="Malheureux" >Malheureux</option>
                                                                         </select>
                                                                   </div>
                                                             </div>
                                                             <div class="cp-field">
-                                                                  <h5>Please enter a description</h5>
-                                                                  <textarea></textarea>
-                                                            </div>
-                                                            <div class="cp-field">
-                                                                  <h5>Please add some media file</h5>
-                                                                  <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                                                  <h5>Ajouter quelques photos et videos</h5>
+                                                                  <div class="form-group">
+                                                                    <div class="input-group col-md-12" >
+                                                                       <input style="height:38px;width:140px;border-radius:7px 0 0 7px;" id="fakeUploadLogo" class="form-control fake-shadow" placeholder="Choose File" disabled="disabled">
+                                                                       <div class="input-group-btn" >
+                                                                         <div class="fileUpload btn btn-danger fake-shadow" style="border-radius:0 7px 7px 0!important;">
+                                                                          <span ><i class="glyphicon glyphicon-upload"></i> Upload Logo</span>
+                                                                          <input class="attachment_upload" id="logo-id" name="filenames[]" type="file" accept="image/png, image/jpeg*" multiple >
+                                                                         </div>
+                                                                       </div>
+                                                                    </div>
+                                                                    <p class="help-block" style="margin-top:10px;">* Upload your products image.</p>
+                                                                  </div>
                                                             </div>
                                                             <div class="save-stngs pd2">
                                                                   <ul>
-                                                                        <li><button type="submit">Save Setting</button></li>
+                                                                        <li><button type="submit">Enregistrer l'evenement</button></li>
 
                                                                   </ul>
                                                             </div>
@@ -523,6 +541,8 @@
                   <!--account-tabs-setting end-->
             </div>
       </section>
+
+
 
       {{-- footer --}}
       @include('layouts.footer')

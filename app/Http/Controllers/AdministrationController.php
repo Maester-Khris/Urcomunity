@@ -11,6 +11,13 @@ class AdministrationController extends Controller
     //
     public function index()
     {
+      // ================ About one to one ==============
+      // $user = User::find(1);
+      // $userDob = $user->profile->dob;
+      // $user = User::find(1);
+      // $user->profile()->save($profile);
+      // $user = $user->profile()->create([]);
+
        // get the members of a particular zones
        // $zone = Zone::find(1);
        // $membres = $zone->membres;
@@ -21,6 +28,7 @@ class AdministrationController extends Controller
        // $zone = $membre->zone;
        // dd($zone);
        // echo $zone->localisation;
+
 
        $zones = Zone::pluck('localisation');
        return view('administration', compact('zones'));

@@ -23,6 +23,7 @@ Route::get('/', function () {
 
 Route::post('ajouter-zone','App\Http\Controllers\ZoneController@create');
 Route::post('ajouter-membre','App\Http\Controllers\MembreProfileController@create');
+Route::post('ajouter-evenement','App\Http\Controllers\EventController@create');
 
 if (App::environment('production')) {
     URL::forceScheme('https');
