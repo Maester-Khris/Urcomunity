@@ -16,7 +16,7 @@ Route::get('accueil','App\Http\Controllers\AccueilController@index');
 Route::get('site-managment','App\Http\Controllers\AdministrationController@index');
 Route::get('membres-voir','App\Http\Controllers\MembreProfileController@index');
 Route::get('evenements','App\Http\Controllers\EventController@list');
-Route::get('evts-details','App\Http\Controllers\EventController@voir');
+Route::get('evts-details/{event}','App\Http\Controllers\EventController@voir')->name('details');
 Route::get('/', function () {
     return view('acceuil');
 });

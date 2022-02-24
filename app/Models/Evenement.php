@@ -9,8 +9,12 @@ class Evenement extends Model
 {
     use HasFactory;
 
+    protected $appends = ['membre_name'];
     protected $fillable = ['titre','qualificatif','description','taux_cautisation','statut'] ;
 
+    public function getMembreNameAttribute(){
+      return $this->membre->name;
+   }
     public function membre()
     {
        return $this->belongsTo(Membre::class);

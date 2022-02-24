@@ -6,18 +6,49 @@ use Illuminate\Http\Request;
 use App\Models\Membre;
 use App\Models\Evenement;
 use App\Models\Media;
+use DateTime;
 
 class EventController extends Controller
 {
     //
     public function list()
     {
-        return view('evenements');
+       $events = Evenement::all();
+       // dd($events);  select('titre','description','created_at')->get()
+       // echo $events->get(0)->titre;
+        return view('evenements')->with(compact('events'));
     }
 
-    public function voir()
+    public function voir(Evenement $event)
     {
-        return view('evenement-detail');
+        // donné a envoyer:
+        // -id des events precedent et suivant
+        $prec = ($event->id == 1) ? $event->id : $event->id - 1;
+        $suiv = ($event->id ==  Evenement::all()->count()) ? $event->id : $event->id + 1;
+        // -lien des media de l'evenements
+        $medias = $event->medias;
+        // -zone du membre
+        $membre = Membre::find($event->membre_id);
+        $membre_zone =  $membre->zone->localisation;
+        // number od days since the events
+        $date_event = new DateTime($event->date_acceptation);
+        $today = new DateTime();
+        $interval = $date_event->diff($today);
+        $final_days = $interval->format('%a');
+        $details = [
+           "titre" => $event->titre,
+           "qualificatif" => $event->qualificatif,
+           "description" => $event->description,
+           "interval_jour" => $final_days,
+           "prec" => $prec,
+           "suiv" => $suiv,
+           "medias" => $medias,
+           "membre_name" => $membre->name,
+           "membre_zone" => $membre_zone,
+        ];
+        // dd($details);
+        return view('evenement-detail',compact('details'));
+        // ->with('details', $details);
     }
 
     public function create(Request $request){

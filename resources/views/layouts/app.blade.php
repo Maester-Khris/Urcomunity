@@ -31,7 +31,7 @@
             <div class="container">
                 <div class="header-data">
                     <div class="logo">
-                        <a href="index.html" title=""><img src="images/01_Icon-Community@2x.png" alt=""
+                        <a href="index.html" title=""><img src="{{asset('images/01_Icon-Community@2x.png')}}" alt=""
                                 style="width:35px; height:35px;"></a>
                     </div>
                     <div class="brand-title logo" style="height:30px; width:80px; padding-top:5px;">

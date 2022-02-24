@@ -7,7 +7,7 @@
 			<div class="forum-links">
 				<ul>
 					<li class="active"><a href="/evenements" title="">All events</a></li>
-					<li><a href="/evts-details" title="">Event description</a></li>
+					<!-- <li><a href="/evts-details" title="">Event description</a></li> -->
 				</ul>
 			</div><!--forum-links end-->
 			<div class="forum-links-btn">
@@ -22,63 +22,24 @@
 				<div class="row">
 					<div class="col-lg-8">
 						<div class="forum-questions">
+							@foreach($events as $event)
 							<div class="usr-question">
 								<div class="usr_img">
 									<img src="http://via.placeholder.com/60x60" alt="">
 								</div>
 								<div class="usr_quest">
-									<h3 style="margin-bottom:7px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
+									<h3 style="margin-bottom:7px;">{{$event->titre}}</h3>
 									<ul class="react-links" style="margin-bottom:10px;">
-										<li><a href="#" title=""><i class="fa fa-user"></i> Member name</a></li>
+										<li><a href="#" title=""><i class="fa fa-user"></i>{{$event->membre_name}}</a></li>
 									</ul>
-									<p style="margin-top:8px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-										Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-										nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in.</p>
+									<p style="margin-top:8px;">{{Str::limit($event->description,180)}}</p>
 										<ul class="quest-tags" >
-										<li><a href="/evts-details" title="" style="background:gold;padding-left:12px;padding-right:12px;">Read more</a></li>
+										<li><a href="{{route('details',[$event->id])}}" title="" style="background:gold;padding-left:12px;padding-right:12px;">Read more</a></li>
 									</ul>
 								</div><!--usr_quest end-->
-								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>3 days ago</span>
+								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>{{ date('d-m-Y', strtotime($event->created_at))}}</span>
 							</div><!--usr-question end-->
-							<div class="usr-question">
-								<div class="usr_img">
-									<img src="http://via.placeholder.com/60x60" alt="">
-								</div>
-								<div class="usr_quest">
-									<h3 style="margin-bottom:7px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-									<ul class="react-links" style="margin-bottom:10px;">
-										<li><a href="#" title=""><i class="fa fa-user"></i> Member name</a></li>
-									</ul>
-									<p style="margin-top:8px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-										Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-										nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in.</p>
-										<ul class="quest-tags" >
-										<li><a href="/evts-details" title="" style="background:gold;padding-left:12px;padding-right:12px;">Read more</a></li>
-									</ul>
-								</div><!--usr_quest end-->
-								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>3 days ago</span>
-							</div><!--usr-question end-->
-							<div class="usr-question">
-								<div class="usr_img">
-									<img src="http://via.placeholder.com/60x60" alt="">
-								</div>
-								<div class="usr_quest">
-									<h3 style="margin-bottom:7px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-									<ul class="react-links" style="margin-bottom:10px;">
-										<li><a href="#" title=""><i class="fa fa-user"></i> Member name</a></li>
-									</ul>
-									<p style="margin-top:8px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-										sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-										Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-										nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in.</p>
-										<ul class="quest-tags" >
-										<li><a href="/evts-details" title="" style="background:gold;padding-left:12px;padding-right:12px;">Read more</a></li>
-									</ul>
-								</div><!--usr_quest end-->
-								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>3 days ago</span>
-							</div><!--usr-question end-->
+							@endforeach
 						</div><!--forum-questions end-->
 						<nav aria-label="Page navigation example" class="full-pagi">
 						<ul class="pagination">
