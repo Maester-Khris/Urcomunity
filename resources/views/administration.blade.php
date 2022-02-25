@@ -16,9 +16,9 @@
                               <div class="col-lg-3">
                                     <div class="acc-leftbar">
                                           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                                <a class="nav-item nav-link active" id="nav-acc-tab" data-toggle="tab" href="#nav-acc" role="tab" aria-controls="nav-acc" aria-selected="true"><i class="la la-cogs"></i>Account Setting</a>
+                                                <a class="nav-item nav-link {{$event == false ? 'active' : ''}}" id="nav-acc-tab" data-toggle="tab" href="#nav-acc" role="tab" aria-controls="nav-acc" aria-selected="true"><i class="la la-cogs"></i>Account Setting</a>
                                                 <a class="nav-item nav-link" id="nav-acc-tab" data-toggle="tab" href="#nav-entities" role="tab" aria-controls="nav-entities" aria-selected="true"><i class="la la-cogs"></i>Add Entities</a>
-                                                <a class="nav-item nav-link" id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="false"><i class="fa fa-lock"></i>Post event</a>
+                                                <a class="nav-item nav-link {{$event == true ? 'active' : ''}}" id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="false"><i class="fa fa-lock"></i>Post event</a>
                                                 <a class="nav-item nav-link" id="nav-notification-tab" data-toggle="tab" href="#nav-notification" role="tab" aria-controls="nav-notification" aria-selected="false"><i class="fa fa-flash"></i>Validate event</a>
                                                 <a class="nav-item nav-link" id="nav-requests-tab" data-toggle="tab" href="#nav-requests" role="tab" aria-controls="nav-requests" aria-selected="false"><i class="fa fa-user-secret"></i>Set Groupe roles</a>
                                                 <a class="nav-item nav-link" id="security-login" data-toggle="tab" href="#nav-rules" role="tab" aria-controls="security-login" aria-selected="false"><i class="fa fa-group"></i>Set Groupe rules</a>
@@ -31,7 +31,7 @@
                               <div class="col-lg-9">
                                     <div class="tab-content" id="nav-tabContent">
 
-                                          <div class="tab-pane fade show active" id="nav-acc" role="tabpanel" aria-labelledby="nav-acc-tab">
+                                          <div class="tab-pane fade {{$event == false ? 'show active' : ''}}" id="nav-acc" role="tabpanel" aria-labelledby="nav-acc-tab">
                                                 <div class="acc-setting">
                                                       <h3>Reset account</h3>
                                                       <form>
@@ -69,7 +69,7 @@
                                           </div>
 
                                           {{-- new zone and member --}}
-                                          <div class="tab-pane fade show" id="nav-entities" role="tabpanel" aria-labelledby="nav-acc-tab">
+                                          <div class="tab-pane fade" id="nav-entities" role="tabpanel" aria-labelledby="nav-acc-tab">
                                                 <div class="acc-setting">
                                                       <h3>Add Member & Zones</h3>
                                                       <form  action="{{url('ajouter-zone')}}" method="POST">
@@ -163,7 +163,7 @@
                                           </div>
 
                                           <!-- add event  -->
-                                          <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+                                          <div class="tab-pane fade {{$event == true ? 'show active' : ''}}" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
                                                 <div class="acc-setting">
                                                       <h3>Nouvel Evenement</h3>
                                                       <form action="{{url('ajouter-evenement')}}" method="POST" enctype="multipart/form-data">

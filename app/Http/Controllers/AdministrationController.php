@@ -33,4 +33,9 @@ class AdministrationController extends Controller
        $zones = Zone::pluck('localisation');
        return view('administration', compact('zones'));
     }
+
+    public function event(){
+       $zones = Zone::pluck('localisation');
+      return view ('administration',['event'=>true])->with(compact('zones'));
+   }
 }

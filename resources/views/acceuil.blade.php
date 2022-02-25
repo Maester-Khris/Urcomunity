@@ -152,7 +152,8 @@
                                 </div>
                                 <div class="post-st">
                                     <ul>
-                                        <li><a class="active" href="/evenements" title="">Post an event</a></li>
+                                        <li><a class="" href="/evenements" title="">Liste des evenements</a></li>
+                                        <li><a class="active" href="/post-event" title="">Poster un evenement</a></li>
                                     </ul>
                                 </div>
                                 <!--post-st end-->
