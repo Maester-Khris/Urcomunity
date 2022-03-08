@@ -22,13 +22,13 @@
                                     <!--username-dt end-->
                                     <div class="user-specs">
                                         <h3>Ndongo Julienne</h3>
-                                        <span>Executive Manager</span>
+                                        <span>Administratrice du site</span>
                                     </div>
                                 </div>
                                 <!--user-profile end-->
                                 <ul class="user-fw-status">
                                     <li>
-                                        <a href="/site-managment" title="">Manage Site</a>
+                                        <a href="/site-managment" title="">Gerer le Site</a>
                                     </li>
                                 </ul>
                             </div>
@@ -37,11 +37,11 @@
 
                             <div class="tags-sec full-width">
                                 <ul>
-                                    <li><a href="#" title="">Zones</a></li>
-                                    <li><a href="#" title="">Members</a></li>
-                                    <li><a href="#" title="">Group rules</a></li>
-                                    <li><a href="#" title="">Community Guidelines</a></li>
-                                    <li><a href="#" title="">Past activities</a></li>
+                                    <li><a href="/zones-voir" title="">Zones</a></li>
+                                    <li><a href="/membres-voir" title="">Membres</a></li>
+                                    <li><a href="#" title="">Regles du groupe</a></li>
+                                    <li><a href="#" title="">A propos de la communauté</a></li>
+                                    <li><a href="/contact" title="">Contacter un delegué</a></li>
                                 </ul>
                                 <div class="cp-sec">
                                     <img src="images/01_Icon-Community@2x.png" alt="" style="width:25px; height:25px;">
@@ -54,7 +54,7 @@
 
                         <div class="top-profiles">
                             <div class="pf-hd">
-                                <h3>Active Members</h3>
+                                <h3>Membres Actifs</h3>
                                 <i class="la la-ellipsis-v"></i>
                             </div>
                             <div class="profiles-slider">
@@ -66,7 +66,6 @@
                                         <li><a href="#" title="" class="followw">Follow</a></li>
                                         <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
                                         </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
                                     </ul>
                                 </div>
                                 <!--user-profy end-->
@@ -78,7 +77,6 @@
                                         <li><a href="#" title="" class="followw">Follow</a></li>
                                         <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
                                         </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
                                     </ul>
                                 </div>
                                 <!--user-profy end-->
@@ -90,46 +88,10 @@
                                         <li><a href="#" title="" class="followw">Follow</a></li>
                                         <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
                                         </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
                                     </ul>
                                 </div>
                                 <!--user-profy end-->
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
-                                    </ul>
-                                </div>
-                                <!--user-profy end-->
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
-                                    </ul>
-                                </div>
-                                <!--user-profy end-->
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                        <li><a href="#" title="" class="hire">hire</a></li>
-                                    </ul>
-                                </div>
-                                <!--user-profy end-->
+                                
                             </div>
                             <!--profiles-slider end-->
                         </div>
@@ -184,21 +146,21 @@
                                         </div>
                                     </div>
                                     <div class="job_descp">
-                                        <h3>Senior Wordpress Developer</h3>
+                                        <h3>Marriage de ma fille a la mairie</h3>
                                         <ul class="job-dt">
                                             <li><a href="#" title="" style="background:grey;">Zone</a></li>
-                                            <li><a href="#" title="">Accepted</a></li>
-                                            <li><span>$150 / pers</span></li>
+                                            <li><a href="#" title="">Accepté</a></li>
+                                            <li><span>Fcfa 500 / pers</span></li>
                                         </ul>
                                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus
                                             hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...
-                                            <a href="#" title="">view more</a></p>
+                                            <a href="#" title="">voir la suite</a></p>
                                         <br>
                                         <img src="http://via.placeholder.com/57x57" style="margin-right:8px;" alt="">
                                         <img src="http://via.placeholder.com/57x57" alt="">
                                     </div>
                                     <div class="job-status-bar">
-                                        <a><i class="la la-eye"></i>Views 50</a>
+                                        <a><i class="la la-eye"></i>Vues 50</a>
                                     </div>
                                 </div>
                                 <div class="post-bar">
@@ -223,21 +185,21 @@
                                         </div>
                                     </div>
                                     <div class="job_descp">
-                                        <h3>Senior Wordpress Developer</h3>
+                                        <h3>Assistance a l'operation du bras </h3>
                                         <ul class="job-dt">
                                             <li><a href="#" title="" style="background:grey;">Zone</a></li>
-                                            <li><a href="#" title="">Accepted</a></li>
-                                            <li><span>$150 / pers</span></li>
+                                            <li><a href="#" title="">Accepté</a></li>
+                                            <li><span>Fcfa 1000 / pers</span></li>
                                         </ul>
                                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus
                                             hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...
-                                            <a href="#" title="">view more</a></p>
+                                            <a href="#" title="">voir la suite</a></p>
                                         <br>
                                         <img src="http://via.placeholder.com/57x57" style="margin-right:8px;" alt="">
                                         <img src="http://via.placeholder.com/57x57" alt="">
                                     </div>
                                     <div class="job-status-bar">
-                                        <a><i class="la la-eye"></i>Views 50</a>
+                                        <a><i class="la la-eye"></i>Vues 50</a>
                                     </div>
                                 </div>
                                 <!--post-bar end-->
@@ -267,36 +229,36 @@
                         <div class="right-sidebar">
                             <div class="widget widget-about">
                                 <img src="images/01_Icon-Community@2x.png" alt="" style="width:45px; height:65px;">
-                                <h3>Get a look </h3>
-                                <span>Totally Free</span>
-                                <div class="sign_link" <h3><a href="#" title="">Sign up</a></h3>
+                                <h3>Venez decouvrir</h3>
+                                <span>Jetez un coup d'oeil</span>
+                                <div class="sign_link" <h3><a href="#" title="">Inscription</a></h3>
                                     <!-- <a href="#" title="">Learn about us</a> -->
                                 </div>
                             </div>
                             <!--widget-about end-->
                             <div class="widget widget-jobs">
                                 <div class="sd-title">
-                                    <h3>Most Viewed Events</h3>
+                                    <h3>Evenements populaires</h3>
                                     <i class="la la-ellipsis-v"></i>
                                 </div>
                                 <div class="jobs-list">
                                     <div class="job-info">
                                         <div class="job-details">
-                                            <h3>Senior Product Designer</h3>
+                                            <h3>Marriage a l'eglise </h3>
                                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
                                         </div>
                                         <div class="hr-rate">
-                                            <span>$25/hr</span>
+                                            <span>500 F</span>
                                         </div>
                                     </div>
                                     <!--job-info end-->
                                     <div class="job-info">
                                         <div class="job-details">
-                                            <h3>Senior UI / UX Designer</h3>
+                                            <h3>Anniversaire du président</h3>
                                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
                                         </div>
                                         <div class="hr-rate">
-                                            <span>$25/hr</span>
+                                            <span>500 F</span>
                                         </div>
                                     </div>
                                     <!--job-info end-->
@@ -306,7 +268,7 @@
                                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
                                         </div>
                                         <div class="hr-rate">
-                                            <span>$25/hr</span>
+                                            <span>1000 F</span>
                                         </div>
                                     </div>
                                     <!--job-info end-->

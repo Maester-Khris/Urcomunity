@@ -19,7 +19,6 @@ class CreateEvenementsTable extends Migration
             $table->string("titre");
             $table->string("qualificatif");
             $table->text("description");
-            $table->integer("taux_cautisation");
             $table->boolean("statut");
             $table->date("date_acceptation")->nullable();
             $table->timestamps();

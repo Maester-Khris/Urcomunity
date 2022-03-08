@@ -12,17 +12,29 @@ class Membre extends Model
     protected $appends = ['zone_name'];
     protected $fillable = ['name','matricule','deleguate','statut','registerd_date'] ;
 
-    public function getZoneNameAttribute(){
+   public function getZoneNameAttribute(){
       return $this->zone->localisation;
    }
 
-    public function zone()
-    {
-        return $this->belongsTo(Zone::class);
-    }
+   public function zone()
+   {
+      return $this->belongsTo(Zone::class);
+   }
 
     public function event()
-      {
-         return $this->hasOne(Evenement::class);
-      }
+   {
+      return $this->hasOne(Evenement::class);
+   }
+
+   public function participant()
+   {
+     return $this->hasOne(Participantcollecte::class);
+   }
+
+  public function beneficiaire()
+   {
+      return $this->hasOne(Beneficiairecollecte::class);
+   }
+
+   
 }

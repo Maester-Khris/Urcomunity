@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Membre;
 use App\Models\Evenement;
 use App\Models\Media;
+use Date;
 use DateTime;
 
 class EventController extends Controller
@@ -14,10 +15,18 @@ class EventController extends Controller
     public function list()
     {
        $events = Evenement::all();
-       // dd($events);  select('titre','description','created_at')->get()
-       // echo $events->get(0)->titre;
-        return view('evenements')->with(compact('events'));
+       return view('evenements')->with(compact('events'));
     }
+
+    public function eventvalidate(Request $request){
+      $event = Evenement::where('titre',$request->titre)->first();
+      $today = date("Y-m-d");
+      $event->statut = $request->statut;
+      $event->date_acceptation = $today;
+      $event->save();
+      return response()->json(['success'=>'Ajax request submitted successfully']);
+       // return response()->json($request);
+   }
 
     public function voir(Evenement $event)
     {
@@ -52,6 +61,7 @@ class EventController extends Controller
     }
 
     public function create(Request $request){
+      // integrer les conditions pour declarer un evenement
       $request->validate([
           'titre' => 'required',
           'qualificatif' => 'required',
@@ -66,7 +76,6 @@ class EventController extends Controller
          'titre' => $request->titre,
          'qualificatif' => $request->qualificatif,
          'description' => $request->description,
-         'taux_cautisation' => ($request->qualificatif == "Heureux") ? 500 : 1000,
          'statut' => 0
       ]);
 
@@ -83,5 +92,5 @@ class EventController extends Controller
       }
 
         return redirect('/site-managment');
-   }
+    }
 }

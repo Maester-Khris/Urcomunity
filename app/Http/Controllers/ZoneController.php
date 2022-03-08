@@ -8,6 +8,13 @@ use App\Models\Zone;
 class ZoneController extends Controller
 {
     //
+    public function index()
+     {
+         $zones = Zone::with('membres')->get();;
+         // dd($zones);
+         return view('zones', compact('zones'));
+     }
+
     public function create(Request $request){
         $request->validate([
             'localisation' => 'required',
@@ -15,7 +22,7 @@ class ZoneController extends Controller
         ]);
 
         Zone::create($request->all());
-        
+
         // retrieve the zone of a member
         // $zone = Membre::find(1);
         // echo $zone->localisation;

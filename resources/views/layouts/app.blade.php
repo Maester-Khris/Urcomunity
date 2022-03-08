@@ -45,11 +45,15 @@
                         <a href="#" title=""><i class="fa fa-bars"></i></a>
                     </div>
                     <!--menu-btn end-->
-                    <div class="user-account">
+                    <div class="user-account" style="width: 230px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
                         <div class="user-info">
                             <img src="http://via.placeholder.com/30x30" alt="">
                             <a href="#" title="">Julie</a>
                         </div>
+                        <form action="{{url('logout')}}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-warning">deconnecter</button>
+                        </form>
 
                     </div>
                 </div>

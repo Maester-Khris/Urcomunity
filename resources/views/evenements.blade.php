@@ -6,7 +6,7 @@
 		<div class="container">
 			<div class="forum-links">
 				<ul>
-					<li class="active"><a href="/evenements" title="">All events</a></li>
+					<li class="active"><a href="/evenements" title="">Tous les evenements</a></li>
 					<!-- <li><a href="/evts-details" title="">Event description</a></li> -->
 				</ul>
 			</div><!--forum-links end-->
@@ -34,7 +34,7 @@
 									</ul>
 									<p style="margin-top:8px;">{{Str::limit($event->description,180)}}</p>
 										<ul class="quest-tags" >
-										<li><a href="{{route('details',[$event->id])}}" title="" style="background:gold;padding-left:12px;padding-right:12px;">Read more</a></li>
+										<li><a href="{{route('details',[$event->id])}}" title="" style="background:gold;padding-left:12px;padding-right:12px;">Lire la suite</a></li>
 									</ul>
 								</div><!--usr_quest end-->
 								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>{{ date('d-m-Y', strtotime($event->created_at))}}</span>
@@ -43,14 +43,14 @@
 						</div><!--forum-questions end-->
 						<nav aria-label="Page navigation example" class="full-pagi">
 						<ul class="pagination">
-							<li class="page-item"><a class="page-link pvr" href="#">Previous</a></li>
+							<li class="page-item"><a class="page-link pvr" href="#">Precedent</a></li>
 							<li class="page-item"><a class="page-link active" href="#">1</a></li>
 							<li class="page-item"><a class="page-link" href="#">2</a></li>
 							<li class="page-item"><a class="page-link" href="#">3</a></li>
 							<li class="page-item"><a class="page-link" href="#">4</a></li>
 							<li class="page-item"><a class="page-link" href="#">5</a></li>
 							<li class="page-item"><a class="page-link" href="#">6</a></li>
-							<li class="page-item"><a class="page-link pvr" href="#">Next</a></li>
+							<li class="page-item"><a class="page-link pvr" href="#">Suivant</a></li>
 						</ul>
 						</nav>
 					</div>
@@ -58,7 +58,7 @@
 
 					<div class="col-lg-4">
 						<div class="widget widget-adver" style="position:relative;">
-							<p style="color:gray; font-size:18px;font-family:Source Sans Pro;font-weight:bold;position:absolute;bottom:0;right:10px;">Last event image of the week</p>
+							<p style="color:gray; font-size:18px;font-family:Source Sans Pro;font-weight:bold;position:absolute;bottom:0;right:10px;">Derniers evenements de la semaine</p>
 							<img src="images/de-live_venue3326_admin.png" style="width:350px;height:270px;" alt="Last image of vents">
 						</div><!--widget-adver end-->
 					</div>

@@ -6,8 +6,8 @@
             <div class="container">
                   <div class="forum-links">
                         <ul>
-                              <li><a href="/evenements" title="">All events</a></li>
-                              <li  class="active"><a href="/evts-details" title="">Event description</a></li>
+                              <li><a href="/evenements" title="">Tous les evenements</a></li>
+                              <li  class="active"><a href="/evts-details" title="">Description d'un evenement</a></li>
                         </ul>
                   </div><!--forum-links end-->
                   <div class="forum-links-btn">
@@ -29,10 +29,10 @@
                                                 </div>
                                                 <div class="usr_quest">
                                                       <h3>{{$details['titre']}}</h3>
-                                                      <span><i class="fa fa-clock-o"></i>{{$details['interval_jour']}} days ago</span>
+                                                      <span><i class="fa fa-clock-o"></i> il y a {{$details['interval_jour']}} jours</span>
                                                       <ul class="react-links">
                                                             <li><a href="#" title=""><i class="fa fa-user"></i>{{$details['membre_name']}}</a></li>
-                                                            <li><a href="#" title=""><i class="fa fa-heart"></i> Vote 150</a></li>
+                                                            <li><a href="#" title=""><i class="fa fa-heart"></i> Votes 150</a></li>
                                                       </ul>
                                                       <ul class="quest-tags">
                                                             <li><a href="#" title="">{{$details['qualificatif']}}</a></li>
@@ -53,7 +53,7 @@
                               <div class="col-lg-4">
                                     <div class="widget widget-adver ">
                                           <div class="pf-hd">
-                                                <h3>Photos & Videos</h3>
+                                                <h3>Photos & Vidéos</h3>
                                           </div>
                                           <div class="profiles-slider">
                                              @foreach($details['medias'] as $media)
@@ -62,7 +62,7 @@
                                           </div>
                                     </div><!--widget-adver end-->
                                     <div class="widget widget-user">
-                                          <h3 class="title-wd">Top Member of the Week</h3>
+                                          <h3 class="title-wd">Membres actifs</h3>
                                           <ul>
                                                 <li>
                                                       <div class="usr-msg-details">

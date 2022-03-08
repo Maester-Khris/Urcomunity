@@ -16,10 +16,10 @@ class CreateBeneficiairecollectesTable extends Migration
         Schema::create('beneficiairecollectes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('membre_id')->unsigned();
-            $table->integer('collecte_id')->unsigned();
+            $table->integer('collectefond_id')->unsigned();
             $table->timestamps();
             $table->foreign('membre_id')->references('id')->on('membres');
-            $table->foreign('collecte_id')->references('id')->on('collectefonds');
+            $table->foreign('collectefond_id')->references('id')->on('collectefonds');
         });
     }
 
