@@ -8,7 +8,8 @@ use App\Models\Membre;
 use App\Models\Evenement;
 use App\Models\Collectefond;
 use App\Models\Participantcollecte;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+
 use Illuminate\Support\Facades\DB;
 use Date;
 use DateTime;
@@ -51,8 +52,7 @@ class AdministrationController extends Controller
 
       // astuce: pour autre requete changer en cours par id collecte
       // membre n'ayant pas encore participé a la collecte en Cours
-      
-
+     
       
 
       // participant de la collecte en cours
@@ -79,8 +79,10 @@ class AdministrationController extends Controller
             ->get();
 
       // role des user
-      $bureaux = Role::where('groupe','Bureau Exécutif')->select("fonction")->get();
-      $sages = Role::where('groupe','Conseil Sage')->select("fonction")->get();
+      $bureaux = Role::where('name','LIKE','B%')->select("name")->get();
+      // dd($bureaux);
+      $sages = Role::where('name','LIKE','C%')->select("name")->get();
+      // dd($sages);
 
       // event à valider
       $events = Evenement::with('membre')->whereNull('date_acceptation')->get();

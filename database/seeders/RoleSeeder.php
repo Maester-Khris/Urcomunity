@@ -20,7 +20,13 @@ class RoleSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('roles')->insert([
+        DB::table('memberroles')->insert([
+            [
+                'fonction' => 'Délégé',
+                'groupe' => 'Zone',
+                'created_at' =>  date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+            ],
             [
                 'fonction' => 'Président',
                 'groupe' => 'Bureau Exécutif',
@@ -29,6 +35,12 @@ class RoleSeeder extends Seeder
             ],
             [
                 'fonction' => 'Chargé de communication',
+                'groupe' => 'Bureau Exécutif',
+                'created_at' =>  date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
+            ],
+            [
+                'fonction' => 'Membre',
                 'groupe' => 'Bureau Exécutif',
                 'created_at' =>  date('Y-m-d'),
                 'updated_at' => date('Y-m-d'),

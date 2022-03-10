@@ -20,8 +20,10 @@ class UserController extends Controller
 
         if($request->remember == "yes"){
             Auth::login($user, $remember = true);
+            $request->session()->regenerate();
         }else{
             Auth::login($user);
+            $request->session()->regenerate();
         }
         return redirect('site-managment');
     }

@@ -9,6 +9,8 @@ use App\Models\User;
 use \Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class MembreProfileController extends Controller
 {
@@ -25,13 +27,9 @@ class MembreProfileController extends Controller
          return view('delegues', compact('delegues'));
      }
 
-
+    // on un cree un user avec ses info son role et sa permision
+    // Note: si il a deja un role changer de role et de permission
     public function setrole(Request $request){
-        // Note: on recupere le membre on verifie si il n'a pas deja le role (relationship)
-        // si il a deja un role on change le role, et celui de l'user associe
-        // si il n'en a pas on lui ajoute le role et on un cree un user avec ses info et son role
-
-        // =============================== uniquement creation des utilisateur =====================
         $request->validate([
             'nom_membre' => 'required',
             'role_membre' => 'required'
@@ -47,7 +45,26 @@ class MembreProfileController extends Controller
             'password' => Hash::make($membre->matricule),
         ]);
 
-        // return response()->json(["membre" => $membre]);
+        if($request->role_membre == "Delege"){
+            $perm = Permission::find(1);
+            $role = Role::find(1);
+            $user->givePermissionTo($perm);
+            $user->assignRole($role);
+            $membre->role()->save($role);
+        }else{
+            $perm_name = explode('_',$request->role_membre)[0];
+            if( $perm_name == "B"){
+                $perm = Permission::find(3);
+            }else{
+                $perm = Permission::find(2);
+            }
+
+            $role = Role::where("name",$request->role_membre)->first();
+            $user->givePermissionTo($perm);
+            $user->assignRole($role);
+            $membre->role()->save($role);
+        }
+        
         return redirect('/site-managment');
     }
 

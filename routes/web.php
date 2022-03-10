@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +19,7 @@ Route::get('membres-voir','App\Http\Controllers\MembreProfileController@index');
 Route::get('evenements','App\Http\Controllers\EventController@list');
 Route::get('evts-details/{event}','App\Http\Controllers\EventController@voir')->name('details');
 Route::get('post-event','App\Http\Controllers\AdministrationController@event');
+
 Route::get('connexion', function () {
     return view('auth.login');
 });

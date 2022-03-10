@@ -36,5 +36,10 @@ class Membre extends Model
       return $this->hasOne(Beneficiairecollecte::class);
    }
 
+   public function role()
+   {
+      return $this->hasOne(Role::class);
+   }
+
    
 }

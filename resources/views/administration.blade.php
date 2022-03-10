@@ -55,7 +55,7 @@
 
                             <a class="nav-item nav-link" id="nav-acc-tab" data-toggle="tab" href="#nav-acc" role="tab"
                             aria-controls="nav-acc" aria-selected="true"><i class="la la-cogs"></i>Reinitialiser
-                            un compte</a>
+                             compte</a>
 
                             <a class="nav-item nav-link" id="nav-status-tab"
                             data-toggle="tab" href="#nav-status" role="tab" aria-controls="nav-status"
@@ -713,7 +713,7 @@
                        {{-- Admin roles --}}
                         <div class="tab-pane fade" id="nav-requests" role="tabpanel" aria-labelledby="nav-requests-tab">
                             <div class="acc-setting" style="min-height:448px;">
-                                <h3>Roles des Utilisateur</h3>
+                                <h3>Ajouter un compte Administrateur</h3>
                                 <form action="{{url('definir-role')}}" method="POST">
                                     @csrf
                                     <div class="cp-field">
@@ -728,16 +728,20 @@
                                         <div class="cpp-fiel">
                                             <select id="inputState" class="form-control" name="role_membre">
                                                 <option selected>Choisir...</option>
+                                                <optgroup label="Zone">
+                                                    <option value="Delege">Delegé de Zone</option>
+                                                </optgroup>
                                                 <optgroup label="Bureau Executif">
                                                     @foreach ($bureaux as $bureau)
-                                                        <option value="{{$bureau->fonction}}">Bureux Exe. - {{$bureau->fonction}}</option>
+                                                        <option value="{{$bureau->name}}">Bureux Exe. - {{explode('_',$bureau->name)[1]}}</option>
                                                     @endforeach
                                                 </optgroup>
                                                 <optgroup label="Conseil des Sages">
                                                     @foreach ($sages as $sage)
-                                                        <option value="{{$sage->fonction}}">Conseil S. - {{$sage->fonction}}</option>
+                                                        <option value="{{$sage->name}}">Conseil S. - {{explode('_',$sage->name)[1]}}</option>
                                                     @endforeach
                                                 </optgroup>
+                                                
                                             </select>
                                         </div>
                                     </div>
