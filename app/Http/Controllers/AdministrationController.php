@@ -22,21 +22,6 @@ class AdministrationController extends Controller
 
     public function index()
     {
-      // $partiforcurentfund = DB::table('participantcollectes')
-      //   ->select("participantcollectes.id as participant_id","participantcollectes.membre_id","participantcollectes.collectefond_id")
-      //   ->join('collectefonds', function ($join) {
-      //       $join->on('participantcollectes.collectefond_id', '=', 'collectefonds.id')
-      //       ->where('collectefonds.statut','En cours');
-      //   });
-
-      // $nomp = DB::table('membres')
-      //             ->select("membres.id as membre_id")
-      //             ->leftJoinSub($partiforcurentfund, 'participants', function($join) {
-      //                $join->on('membres.id', '=', 'participants.membre_id')
-      //                      // ->select("participants.id as participant_id")
-      //                      ->whereNull('participants.membre_id');
-      //             })->get();
-      // 
 
       $nonparticipants = Membre::with('zone')
          ->leftjoin('participantcollectes','participantcollectes.membre_id','=','membres.id')
@@ -45,7 +30,6 @@ class AdministrationController extends Controller
          ->where('collectefonds.statut','En cours')
          ->get()
          ;
-         // dd($nonparticipants);
 
       
       // ============================= Validé ===================================================
@@ -53,7 +37,8 @@ class AdministrationController extends Controller
       // astuce: pour autre requete changer en cours par id collecte
       // membre n'ayant pas encore participé a la collecte en Cours
      
-      
+     $membres = Membre::with('user')->get();
+   //   dd($membres->user->getRoleNames()); 
 
       // participant de la collecte en cours
       $collecte = Collectefond::with('participants.membre')->where('statut','En Cours')->first();
@@ -78,11 +63,8 @@ class AdministrationController extends Controller
             ->join('collectefonds','collectefonds.evenement_id','!=','evenements.id')
             ->get();
 
-      // role des user
       $bureaux = Role::where('name','LIKE','B%')->select("name")->get();
-      // dd($bureaux);
       $sages = Role::where('name','LIKE','C%')->select("name")->get();
-      // dd($sages);
 
       // event à valider
       $events = Evenement::with('membre')->whereNull('date_acceptation')->get();
@@ -100,7 +82,8 @@ class AdministrationController extends Controller
          // ->with(compact('nonparticipants'))
          ->with(compact('beneficiaires'))
          ->with(compact('bureaux'))
-         ->with(compact('sages'));
+         ->with(compact('sages'))
+         ->with(compact('membres')); 
     }
 
    //  public function event(){

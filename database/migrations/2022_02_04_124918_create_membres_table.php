@@ -15,8 +15,8 @@ class CreateMembresTable extends Migration
     {
         Schema::create('membres', function (Blueprint $table) {
             $table->increments('id');
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->integer('zone_id')->unsigned();
-            // $table->integer('role_id')->unsigned();
             $table->string("name");
             $table->string("matricule");
             $table->string("telephone");
@@ -25,7 +25,11 @@ class CreateMembresTable extends Migration
             $table->date("registered_date");
             $table->timestamps();
             $table->foreign('zone_id')->references('id')->on('zones');
-            // $table->foreign('role_id')->references('id')->on('roles');
+            
+        });
+
+        Schema::table('membres', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

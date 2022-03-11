@@ -39,18 +39,30 @@ class MembreProfileController extends Controller
         $email = Str::limit($membre->name,7);
         $email = $email . '@gmail.com';
 
-        $user = User::create([
-            'name' => $membre->name,
-            'email' => $email,
-            'password' => Hash::make($membre->matricule),
-        ]);
-
+        $user_exist = User::where('name',$request->nom_membre)->first()->count();
+        // dd($user_exist);
+        if($user_exist >= 1){
+            $user = User::where('name',$request->nom_membre)->first();
+            // revoke role and permission
+            if($user->getRoleNames()->count() >= 1 && $user->getDirectPermissions()->count() >= 1){
+                $role = Role::where('name',$user->getRoleNames())->first();
+                // dd($role);
+                $user->removeRole($role);
+                $user->revokePermissionTo($user->getDirectPermissions());
+            } 
+        }else{
+            $user = User::create([
+                'name' => $membre->name,
+                'email' => $email,
+                'password' => Hash::make($membre->matricule),
+            ]);
+        }
+        
         if($request->role_membre == "Delege"){
             $perm = Permission::find(1);
             $role = Role::find(1);
             $user->givePermissionTo($perm);
             $user->assignRole($role);
-            $membre->role()->save($role);
         }else{
             $perm_name = explode('_',$request->role_membre)[0];
             if( $perm_name == "B"){
@@ -58,13 +70,12 @@ class MembreProfileController extends Controller
             }else{
                 $perm = Permission::find(2);
             }
-
             $role = Role::where("name",$request->role_membre)->first();
             $user->givePermissionTo($perm);
-            $user->assignRole($role);
-            $membre->role()->save($role);
+            $user->assignRole($role);   
         }
-        
+        $membre->user_id = $user->id;
+        $membre->save(); 
         return redirect('/site-managment');
     }
 

@@ -4,7 +4,12 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/admin.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('css/preview.css')}}">
 <style media="screen">
-
+td.job-dt {
+    padding: 12px 3px;
+}
+.job-dt li {
+    margin-right: 8px;
+}
 </style>
 @endpush
 @push('scripts')
@@ -72,8 +77,6 @@
                             <a class="nav-item nav-link" id="privacy" data-toggle="tab" href="#nav-crowfund" role="tab"
                                 aria-controls="privacy" aria-selected="false"><i class="fa fa-paw"></i>Collecte de fond</a>
 
-                            
-
                             <a class="nav-item nav-link" id="nav-rules-tab" data-toggle="tab" href="#nav-rules"
                                 role="tab" aria-controls="nav-rules" aria-selected="false"><i
                                     class="fa fa-group"></i>Regles du groupe</a>
@@ -93,59 +96,48 @@
                                         <thead class="" style="background:#E44D3A">
                                             <tr>
                                                 <th scope="col" style="width: 10%">Matricule</th>
-                                                <th scope="col" style="width: 10%">Zone</th>
+                                                <th scope="col" style="width: 20%">Zone</th>
                                                 <th scope="col" style="width: 25%">Noms & prenoms</th>
-                                                <th scope="col" style="width: 55%">Role & Actions</th>
+                                                <th scope="col" style="width: 45%">Role & Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td class="job-dt">
-                                                    <li><a href="#" title="" style="background:gold;">C. Sage</a></li>
-                                                    <li><a href="#" title="" style="">activé</a></li>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td class="job-dt">
-                                                    <li><a href="#" title="" style="background:rgb(9, 179, 179);">B. executif</a></li>
-                                                    {{-- <li><a href="#" title="" style="background:#303281;">delegate</a> </li>--}}
-                                                    <li><a href="#" title="" style="">activé</a></li>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td class="job-dt">
-                                                    <li><a href="#" title="" style="background:grey;">desactivé</a> </li>
-                                                    {{-- <li><a href="#" title="">activate</a></li> --}}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td class="job-dt">
-                                                    <li><a href="#" title="" style="background:grey;">desactivé</a></li>
-                                                    {{-- <li><a href="#" title="">activate</a></li> --}}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td class="job-dt">
-                                                    {{-- <li><a href="#" title="">activate</a></li> --}}
-                                                    <li><a href="#" title="" style="background:#303281;">delegué</a></li>
-                                                    <li><a href="#" title="" style="">activé</a></li>
-                                                </td>
-                                            </tr>
+                                            @foreach ($membres as $membre)
+                                                <tr>
+                                                    <th scope="row">{{$membre->matricule}}</th>
+                                                    <td>{{$membre->zone_name}}</td>
+                                                    <td>{{$membre->name}}</td>
+                                                    <td class="job-dt">
+                                                        @if($membre->deleguate == true)
+                                                            <li><a href="#" title="" style="background:#303281;">Delegué</a></li>
+                                                        @endif
+
+                                                        @if($membre->user)
+                                                           @php 
+                                                             $role = preg_split('/"/',$membre->user->getRoleNames())[1]
+                                                           @endphp
+                                                            @if(explode('_', $role)[0] == 'B')
+                                                                <li><a href="#" title="" style="background:rgb(9, 179, 179);">B. executif</a></li>
+                                                                <li><a href="#" title="" style="background:#4ece43;">
+                                                                   {{ Str::limit(explode('_', $role)[1], 10) }}
+                                                                </a></li>
+                                                            @elseif(explode('_', $role)[0] == 'C')
+                                                                <li><a href="#" title="" style="background:gold;">C. Sage</a></li>
+                                                                <li><a href="#" title="" style="background:#4ece43;">
+                                                                    {{ Str::limit(explode('_', $role)[1], 10) }}
+                                                                </a></li>
+                                                            @endif
+                                                        @endif
+                                                        
+                                                        @if($membre->statut == true)
+                                                            <li><a href="#" title="" style="">Activé</a></li>
+                                                        @else
+                                                            <li><a href="#" title="" style="background:grey;">Desactivé</a> </li>
+                                                        @endif
+
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

@@ -41,5 +41,10 @@ class Membre extends Model
       return $this->hasOne(Role::class);
    }
 
+   public function user()
+   {
+      return $this->belongsTo(User::class);
+   }
+
    
 }

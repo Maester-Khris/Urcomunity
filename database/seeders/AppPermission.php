@@ -32,6 +32,7 @@ class AppPermission extends Seeder
         $role2 = Role::create(['name' => 'B_Membre']);
         $role3 = Role::create(['name' => 'C_Membre']);
 
+        // assign role and permission 'super'
         $user = User::create([
             'name' => 'Plantini Moricho',
             'email' => 'Plantini@gmail.com',
