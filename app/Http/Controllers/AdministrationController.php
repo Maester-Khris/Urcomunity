@@ -31,14 +31,14 @@ class AdministrationController extends Controller
          ->get()
          ;
 
-      
+
       // ============================= Validé ===================================================
 
       // astuce: pour autre requete changer en cours par id collecte
       // membre n'ayant pas encore participé a la collecte en Cours
-     
+
      $membres = Membre::with('user')->get();
-   //   dd($membres->user->getRoleNames()); 
+     //dd($membres->user->getRoleNames());
 
       // participant de la collecte en cours
       $collecte = Collectefond::with('participants.membre')->where('statut','En Cours')->first();
@@ -83,7 +83,7 @@ class AdministrationController extends Controller
          ->with(compact('beneficiaires'))
          ->with(compact('bureaux'))
          ->with(compact('sages'))
-         ->with(compact('membres')); 
+         ->with(compact('membres'));
     }
 
    //  public function event(){

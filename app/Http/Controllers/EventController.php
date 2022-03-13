@@ -49,6 +49,7 @@ class EventController extends Controller
            "qualificatif" => $event->qualificatif,
            "description" => $event->description,
            "interval_jour" => $final_days,
+           "vues" => $event->nombre_vues,
            "prec" => $prec,
            "suiv" => $suiv,
            "medias" => $medias,
@@ -76,7 +77,8 @@ class EventController extends Controller
          'titre' => $request->titre,
          'qualificatif' => $request->qualificatif,
          'description' => $request->description,
-         'statut' => 0
+         'statut' => 0,
+         'nombre_vues' => 0
       ]);
 
       if($request->hasfile('filenames')){

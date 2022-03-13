@@ -161,26 +161,66 @@ td.job-dt {
                         <div class="tab-pane fade" id="nav-acc" role="tabpanel" aria-labelledby="nav-acc-tab">
                             <div class="acc-setting" style="min-height:448px;">
                                 <h3>Reinitialiser un compte</h3>
-                                <form>
+                                <form action="{{url('reset-compte')}}" method="POST">
+                                    @csrf
                                     <div class="cp-field">
                                         <h5>Matricule du compte</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="old-password" placeholder="entrer le matricule">
+                                            <input type="text" name="matricule" placeholder="entrer le matricule">
                                             <i class="fa fa-lock"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Nom et Prenom (Nouveau)</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="new-password" placeholder="entrer le Nom complet">
+                                            <input type="text" name="nouveau_nom" placeholder="entrer le Nom complet">
                                             <i class="fa fa-lock"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Zone (Nouveau)</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="repeat-password" placeholder="entrer la zone">
+                                            <select id="inputState" class="form-control" name="nouveau_zone">
+                                                <option selected>Choose...</option>
+                                                @foreach($zones as $zone)
+                                                <option value="{{$zone}}"> {{ $zone }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="cp-field">
+                                        <h5>Numero de telephone</h5>
+                                        <div class="cpp-fiel">
+                                            <input type="text" name="nouveau_telephone" placeholder="Num telephone">
                                             <i class="fa fa-lock"></i>
+                                        </div>
+                                    </div>
+                                    <div class="cp-field">
+                                        <h5>Date d'inscription effective <small>(après payement des frais
+                                                d'inscription)</small></h5>
+                                        <div class="cpp-fiel">
+                                            <input type="date" name="nouveau_registered_date" placeholder="Num telephone">
+                                            <i class="fa fa-lock"></i>
+                                        </div>
+                                    </div>
+                                    <div class="cp-field">
+                                        <h5>Est-il delegué de sa zone ?</h5>
+                                        <div class="checky-sec">
+                                            <div class="fgt-sec" style="margin-right:15px;">
+                                                <input type="radio" name="nouveau_deleguate" id="c1" value="1">
+                                                <label for="c1">
+                                                    <span></span>
+                                                </label>
+                                                <small>Oui</small>
+                                            </div>
+                                            <div class="fgt-sec">
+                                                <input type="radio" name="nouveau_deleguate" id="c2" value="0">
+                                                <label for="c2">
+                                                    <span></span>
+                                                </label>
+                                                <small>Non</small>
+                                            </div>
+                                            <!--fgt-sec end-->
                                         </div>
                                     </div>
                                     <div class="save-stngs pd2">
@@ -701,7 +741,7 @@ td.job-dt {
                                 </div>
                             </div>
                         </div>
-
+                        
                        {{-- Admin roles --}}
                         <div class="tab-pane fade" id="nav-requests" role="tabpanel" aria-labelledby="nav-requests-tab">
                             <div class="acc-setting" style="min-height:448px;">

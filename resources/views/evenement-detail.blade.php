@@ -32,7 +32,7 @@
                                                       <span><i class="fa fa-clock-o"></i> il y a {{$details['interval_jour']}} jours</span>
                                                       <ul class="react-links">
                                                             <li><a href="#" title=""><i class="fa fa-user"></i>{{$details['membre_name']}}</a></li>
-                                                            <li><a href="#" title=""><i class="fa fa-heart"></i> Votes 150</a></li>
+                                                            <li><a href="#" title=""><i class="fa fa-eye"></i>Vues {{$details['vues']}}</a></li>
                                                       </ul>
                                                       <ul class="quest-tags">
                                                             <li><a href="#" title="">{{$details['qualificatif']}}</a></li>

@@ -1,6 +1,10 @@
 @extends('layouts.app',['title'=>'Home'])
 
 @section('content')
+
+@php
+ $today = new DateTime();
+@endphp
 <main>
     <div class="main-section">
         <div class="container">
@@ -21,8 +25,8 @@
                                     </div>
                                     <!--username-dt end-->
                                     <div class="user-specs">
-                                        <h3>Ndongo Julienne</h3>
-                                        <span>Administratrice du site</span>
+                                        <h3>{{$manager->name}}</h3>
+                                        <span>Administrateur du site</span>
                                     </div>
                                 </div>
                                 <!--user-profile end-->
@@ -54,44 +58,33 @@
 
                         <div class="top-profiles">
                             <div class="pf-hd">
-                                <h3>Membres Actifs</h3>
+                                <h3>Bureau Executif</h3>
                                 <i class="la la-ellipsis-v"></i>
                             </div>
                             <div class="profiles-slider">
+                               @Foreach($mem_bureaux as $bureau)
+
+                                  @php
+                                    $role = preg_split('/"/',$bureau->getRoleNames())[1]
+                                  @endphp
+
                                 <div class="user-profy">
                                     <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
+                                    <h3>{{$bureau->name}}</h3>
+
+
+                                       <span>{{explode('_', $role)[1]}}</span>
+
+
                                     <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
+                                        <li><a href="#" title="" class="followw">695347568</a></li>
                                         <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
                                         </li>
                                     </ul>
                                 </div>
+                                @endforeach
                                 <!--user-profy end-->
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!--user-profy end-->
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>John Doe</h3>
-                                    <span>Graphic Designer</span>
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">Follow</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!--user-profy end-->
-                                
+
                             </div>
                             <!--profiles-slider end-->
                         </div>
@@ -115,7 +108,7 @@
                                 <div class="post-st">
                                     <ul>
                                         <li><a class="" href="/evenements" title="">Liste des evenements</a></li>
-                                        <li><a class="active" href="/post-event" title="">Poster un evenement</a></li>
+                                        <li><a class="active" href="/site-managment" title="">Poster un evenement</a></li>
                                     </ul>
                                 </div>
                                 <!--post-st end-->
@@ -124,13 +117,16 @@
 
                             <div class="posts-section">
 
+                               @foreach($events as $event)
                                 <div class="post-bar">
                                     <div class="post_topbar">
                                         <div class="usy-dt">
                                             <img src="http://via.placeholder.com/50x50" alt="">
                                             <div class="usy-name">
-                                                <h3>John Doe</h3>
-                                                <span><img src="images/clock.png" alt="">3 min ago</span>
+                                                <h3>{{$event->membre->name}}</h3>
+                                                <span><img src="images/clock.png" alt="">
+                                                   il y a {{ $event->created_at->diff($today)->format('%a') }} jours
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="ed-opts">
@@ -146,63 +142,28 @@
                                         </div>
                                     </div>
                                     <div class="job_descp">
-                                        <h3>Marriage de ma fille a la mairie</h3>
+                                        <h3>{{Str::limit($event->titre, 50)}}</h3>
                                         <ul class="job-dt">
-                                            <li><a href="#" title="" style="background:grey;">Zone</a></li>
-                                            <li><a href="#" title="">Accepté</a></li>
-                                            <li><span>Fcfa 500 / pers</span></li>
+                                            <li><a href="#" title="" style="background:grey;">{{$event->membre->zone->localisation}}</a></li>
+
+                                            <li><a href="#" title="">
+                                                {{ $event->statut == 1 ? 'Accepté' : 'Rejeté' }}
+                                            </a></li>
                                         </ul>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus
-                                            hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...
-                                            <a href="#" title="">voir la suite</a></p>
+                                        <p>
+                                          {{Str::limit($event->description, 150)}}
+                                          <a href="#" title="">voir la suite</a>
+                                        </p>
                                         <br>
                                         <img src="http://via.placeholder.com/57x57" style="margin-right:8px;" alt="">
                                         <img src="http://via.placeholder.com/57x57" alt="">
                                     </div>
                                     <div class="job-status-bar">
-                                        <a><i class="la la-eye"></i>Vues 50</a>
+                                        <a><i class="la la-eye"></i>Vues {{$event->nombre_vues}}</a>
                                     </div>
                                 </div>
-                                <div class="post-bar">
-                                    <div class="post_topbar">
-                                        <div class="usy-dt">
-                                            <img src="http://via.placeholder.com/50x50" alt="">
-                                            <div class="usy-name">
-                                                <h3>John Doe</h3>
-                                                <span><img src="images/clock.png" alt="">3 min ago</span>
-                                            </div>
-                                        </div>
-                                        <div class="ed-opts">
-                                            <a href="#" title="" class="ed-opts-open"><i
-                                                    class="la la-ellipsis-v"></i></a>
-                                            <ul class="ed-options">
-                                                <li><a href="#" title="">Edit Post</a></li>
-                                                <li><a href="#" title="">Unsaved</a></li>
-                                                <li><a href="#" title="">Unbid</a></li>
-                                                <li><a href="#" title="">Close</a></li>
-                                                <li><a href="#" title="">Hide</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="job_descp">
-                                        <h3>Assistance a l'operation du bras </h3>
-                                        <ul class="job-dt">
-                                            <li><a href="#" title="" style="background:grey;">Zone</a></li>
-                                            <li><a href="#" title="">Accepté</a></li>
-                                            <li><span>Fcfa 1000 / pers</span></li>
-                                        </ul>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam luctus
-                                            hendrerit metus, ut ullamcorper quam finibus at. Etiam id magna sit amet...
-                                            <a href="#" title="">voir la suite</a></p>
-                                        <br>
-                                        <img src="http://via.placeholder.com/57x57" style="margin-right:8px;" alt="">
-                                        <img src="http://via.placeholder.com/57x57" alt="">
-                                    </div>
-                                    <div class="job-status-bar">
-                                        <a><i class="la la-eye"></i>Vues 50</a>
-                                    </div>
-                                </div>
-                                <!--post-bar end-->
+
+                               @endforeach
 
                                 <!-- <div class="process-comm">
                                                       <div class="spinner">
@@ -242,36 +203,20 @@
                                     <i class="la la-ellipsis-v"></i>
                                 </div>
                                 <div class="jobs-list">
+                                   @foreach($event_abstract as $event)
                                     <div class="job-info">
                                         <div class="job-details">
-                                            <h3>Marriage a l'eglise </h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+                                            <h3>{{ Str::limit($event->titre, 20) }}</h3>
+                                            <p>{{Str::limit($event->description, 50)}}</p>
                                         </div>
-                                        <div class="hr-rate">
-                                            <span>500 F</span>
+                                        <div class="hr-rate" style="display:flex; flex-direction:column; justify-content:center;align-items:center;">
+                                            <span style="margin-bottom:5px;">vues</span>
+                                            <span style="color:#e44d3a;">{{$event->nombre_vues}}</span>
                                         </div>
                                     </div>
                                     <!--job-info end-->
-                                    <div class="job-info">
-                                        <div class="job-details">
-                                            <h3>Anniversaire du président</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                                        </div>
-                                        <div class="hr-rate">
-                                            <span>500 F</span>
-                                        </div>
-                                    </div>
-                                    <!--job-info end-->
-                                    <div class="job-info">
-                                        <div class="job-details">
-                                            <h3>Junior Seo Designer</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                                        </div>
-                                        <div class="hr-rate">
-                                            <span>1000 F</span>
-                                        </div>
-                                    </div>
-                                    <!--job-info end-->
+                                    @endforeach
+
                                 </div>
                                 <!--jobs-list end-->
                             </div>

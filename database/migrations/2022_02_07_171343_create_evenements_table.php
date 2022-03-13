@@ -20,6 +20,7 @@ class CreateEvenementsTable extends Migration
             $table->string("qualificatif");
             $table->text("description");
             $table->boolean("statut");
+            $table->integer('nombre_vues');
             $table->date("date_acceptation")->nullable();
             $table->timestamps();
             $table->foreign('membre_id')->references('id')->on('membres');

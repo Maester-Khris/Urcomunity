@@ -11,21 +11,46 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Date;
 
 class MembreProfileController extends Controller
 {
     //
-    public function index()
-    {
+    public function index(){
         $membres = Membre::all();
         return view('profiles', compact('membres'));
     }
 
-    public function delegues()
-     {
+
+    public function delegues(){
          $delegues = Membre::where('deleguate',1)->get();
          return view('delegues', compact('delegues'));
      }
+
+     public function resetaccount(Request $request){
+      $request->validate([
+          'matricule' => 'required',
+          'nouveau_nom' => 'required',
+          'nouveau_zone' => 'required',
+          'nouveau_telephone' => 'required',
+          'nouveau_registered_date' => 'required',
+          'nouveau_deleguate' => 'required',
+      ]);
+
+      $membre = Membre::where('matricule',$request->matricule)->first();
+      $membre->name = $request['nouveau_nom'];
+      $membre->telephone = $request['nouveau_telephone'];
+      $membre->deleguate = $request['nouveau_deleguate'];
+      $membre->statut = 1;
+      $membre->registered_date = $request['nouveau_registered_date'];
+
+      // $zone = $membre->zone;
+      // $zone->membres()->delete($membre);
+
+      $zone2 = Zone::where('localisation',$request['nouveau_zone'])->first();
+      $zone2->membres()->save($membre);
+      return redirect('/site-managment');
+    }
 
     // on un cree un user avec ses info son role et sa permision
     // Note: si il a deja un role changer de role et de permission
@@ -39,9 +64,9 @@ class MembreProfileController extends Controller
         $email = Str::limit($membre->name,7);
         $email = $email . '@gmail.com';
 
-        $user_exist = User::where('name',$request->nom_membre)->first()->count();
+        $user_exist = User::where('name',$request->nom_membre)->first();
         // dd($user_exist);
-        if($user_exist >= 1){
+        if($user_exist != null ){
             $user = User::where('name',$request->nom_membre)->first();
             // revoke role and permission
             if($user->getRoleNames()->count() >= 1 && $user->getDirectPermissions()->count() >= 1){
@@ -49,7 +74,7 @@ class MembreProfileController extends Controller
                 // dd($role);
                 $user->removeRole($role);
                 $user->revokePermissionTo($user->getDirectPermissions());
-            } 
+            }
         }else{
             $user = User::create([
                 'name' => $membre->name,
@@ -57,7 +82,7 @@ class MembreProfileController extends Controller
                 'password' => Hash::make($membre->matricule),
             ]);
         }
-        
+
         if($request->role_membre == "Delege"){
             $perm = Permission::find(1);
             $role = Role::find(1);
@@ -72,12 +97,13 @@ class MembreProfileController extends Controller
             }
             $role = Role::where("name",$request->role_membre)->first();
             $user->givePermissionTo($perm);
-            $user->assignRole($role);   
+            $user->assignRole($role);
         }
         $membre->user_id = $user->id;
-        $membre->save(); 
+        $membre->save();
         return redirect('/site-managment');
     }
+
 
     public function create(Request $request){
         // dd($request);
@@ -88,19 +114,78 @@ class MembreProfileController extends Controller
             'deleguate' => 'required',
             'registered_date' => 'required'
         ]);
+        $zone = Zone::where('localisation',$request['zone'])->first();
+        $nb = Membre::all()->count();
+
         $membre = new Membre;
         $membre->name=$request['name'];
         $membre->telephone=$request['telephone'];
         $membre->deleguate=$request['deleguate'];
         $membre->registered_date=$request['registered_date'];
-        $membre->matricule='MAAERRF';
         $membre->statut=1;
+        $membre->matricule= $this->newMatricule($nb, $zone->identifiant);
 
-       // Saving related model
-        $zone = Zone::where('localisation',$request['zone'])->first();
+        // Saving related model
         $zone->membres()->save($membre);
-
-
         return redirect('/site-managment');
     }
+
+
+    public function newMatricule($nbr_mem, $iden){
+        // 'y' two digit year vs 'Y' 04 digit year
+        $year = date("y");
+
+        $indice_memb = '';
+        if($nbr < 10){
+           $indice_memb = '000';
+        }else if($nbr < 100){
+           $indice_memb = '00';
+        }
+        else if($nbr < 1000){
+           $indice_memb = '0';
+        }else{
+           $indice_memb = '';
+        }
+
+        $lettre='';
+        switch ($nbr_mem) {
+            case $nbr_mem <= 100:
+              $lettre = 'A';
+              break;
+            case $nbr_mem > 100 && $nbr_mem <= 200:
+              $lettre = 'B';
+              break;
+            case $nbr_mem > 200 && $nbr_mem <= 300:
+              $lettre = 'C';
+              break;
+            case $nbr_mem > 300 && $nbr_mem <= 400:
+              $lettre = 'D';
+              break;
+            case $nbr_mem > 400 && $nbr_mem <= 500:
+              $lettre = 'E';
+              break;
+            case $nbr_mem > 500 && $nbr_mem <= 600:
+              $lettre = 'F';
+              break;
+            case $nbr_mem > 600 && $nbr_mem <= 700:
+              $lettre = 'G';
+              break;
+            case $nbr_mem > 700 && $nbr_mem <= 800:
+              $lettre = 'H';
+              break;
+            case $nbr_mem > 800 && $nbr_mem <= 900:
+              $lettre = 'I';
+              break;
+            case $nbr_mem > 900 && $nbr_mem < 1000:
+              $lettre = 'J';
+              break;
+
+            default:
+               $lettre = 'X' . $nbr_mem;
+          }
+
+        return  $year . $lettre . $indice_memb . $iden ;
+    }
+
+
 }
