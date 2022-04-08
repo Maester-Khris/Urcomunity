@@ -1,11 +1,11 @@
-@extends('layouts.app',['title'=>'List of Member'])
+@extends('layouts.app',['title'=>'Liste des membres'])
 
 @section('content')
 
    <section class="companies-info">
          <div class="container">
-               <div class="company-title">
-                     <h3>All Members</h3>
+               <div class="company-title" >
+                     <h3 style="background: orchid;">Tout les Membres</h3>
                </div><!--company-title end-->
                <div class="companies-list">
                      <div class="row">
@@ -15,9 +15,13 @@
                                        <div class="company-up-info">
                                              <img src="http://via.placeholder.com/90x90" alt="">
                                              <h3>{{$membre->name}}</h3>
-                                             <h4>Tel: (+237) {{$membre->telephone}}</h4>
+                                             <h4 style="margin-bottom: 10px;">
+                                                <span class="badge badge-warning" style="padding:8px;font-size:14px;">
+                                                      Tel: (+237) {{$membre->telephone}}
+                                                </span>
+                                             </h4>
                                              <ul>
-                                                   <li style=""><a href="#" title="" class="follow" style="padding-left:40px;padding-right:40px;height:30px; line-height:30px;	border-radius: 30px;">{{$membre->zone_name}}</a></li>
+                                                   <li style=""><a href="#" title="" class="follow" style="padding-left:40px;padding-right:40px;height:30px;line-height:30px;">{{$membre->zone_name}}</a></li>
                                              </ul>
                                        </div>
                                  </div><!--company_profile_info end-->

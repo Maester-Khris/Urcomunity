@@ -15,13 +15,15 @@ class CreateMembresTable extends Migration
     {
         Schema::create('membres', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->integer('zone_id')->unsigned();
+            $table->bigInteger('user_id')->nullable()->unsigned();
+            $table->integer('zone_id')->nullable()->unsigned();
             $table->string("name");
             $table->string("matricule");
             $table->string("telephone");
             $table->boolean("deleguate");
             $table->boolean("statut");
+            $table->string("numero_cni");
+            $table->string("url_photo")->nullable();
             $table->date("registered_date");
             $table->timestamps();
             $table->foreign('zone_id')->references('id')->on('zones');
@@ -29,7 +31,7 @@ class CreateMembresTable extends Migration
         });
 
         Schema::table('membres', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

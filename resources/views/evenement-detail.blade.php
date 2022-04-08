@@ -1,5 +1,55 @@
 @extends('layouts.app',['title'=>'Event View'])
 
+@push('styles')
+<meta name="csrf-token" content="{{ csrf_token() }}" />
+@endpush
+
+@push('scripts')
+<script>
+      function plusOneView(event_id){
+            let _token = $('meta[name="csrf-token"]').attr('content');
+            let data = {
+                  eventid: event_id,
+                  _token: _token
+            };
+            console.log(data);
+            $.ajaxSetup({
+                  headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+            });
+            $.ajax({
+                  url: "/add-views",
+                  type:"POST",
+                  data:data,
+                  success:function(response){
+                        if(response) {
+                              console.log(response);
+                        }
+                  },
+                  error: function(error) {
+                        console.log(error);
+                  }
+            });
+      }
+</script>
+<script type="text/javascript">
+      $(document).ready(function() {
+            var checkLoaded = setInterval(function() {
+                  var $template = $('#template');
+                  var node = $template.prop('content');
+                  var $content = $(node).find('div');
+                  if($content.text()){
+                        plusOneView($content.text());
+                        clearInterval(checkLoaded);
+                  }else{
+                        console.log("en attente");
+                  }   
+            }, 2000);            
+      });
+</script>
+@endpush
+
 @section('content')
 
       <section class="forum-sec">
@@ -29,13 +79,18 @@
                                                 </div>
                                                 <div class="usr_quest">
                                                       <h3>{{$details['titre']}}</h3>
-                                                      <span><i class="fa fa-clock-o"></i> il y a {{$details['interval_jour']}} jours</span>
+                                                      <span style="color:#457b9d"><i class="fa fa-clock-o"></i> il y a {{$details['interval_jour']}} jours</span>
                                                       <ul class="react-links">
-                                                            <li><a href="#" title=""><i class="fa fa-user"></i>{{$details['membre_name']}}</a></li>
-                                                            <li><a href="#" title=""><i class="fa fa-eye"></i>Vues {{$details['vues']}}</a></li>
+                                                            <li><a href="#" title="" style="color:#a8dadc"><i class="fa fa-user"></i>{{$details['membre_name']}}</a></li>
+                                                            <li><a href="#" title="" style="color:#e63946"><i class="fa fa-eye"></i>Vues {{$details['vues']}}</a></li>
                                                       </ul>
                                                       <ul class="quest-tags">
-                                                            <li><a href="#" title="">{{$details['qualificatif']}}</a></li>
+                                                            @if($details['qualificatif'] == "Heureux")
+                                                                  <li><a href="#" title="" style="background:#ffd6a5">{{$details['qualificatif']}}</a></li>
+                                                            @else
+                                                                  <li><a href="#" title="" style="background:#b5838d">{{$details['qualificatif']}}</a></li>
+                                                            @endif
+                                                           
                                                             <li><a href="#" title="">{{$details['membre_zone']}}</a></li>
                                                       </ul>
                                                       <p>{{$details['description']}}</p>
@@ -56,9 +111,14 @@
                                                 <h3>Photos & Vidéos</h3>
                                           </div>
                                           <div class="profiles-slider">
-                                             @foreach($details['medias'] as $media)
-                                                <img class="user-profy" src="{{asset('uploads/events/'.$media->url_destination.'')}}" alt="" style="height:300px;width:300px;">
-                                             @endforeach
+                                                @if(count($details['medias']) == 0)
+                                                <img class="user-profy" src="{{asset('images/event-default1.png')}}" alt="" style="height:200px;width:200px;">
+                                                @else
+                                                      @foreach($details['medias'] as $media)
+                                                            <img class="user-profy" src="{{asset('uploads/events/'.$media->url_destination.'')}}" alt="" style="height:300px;width:300px;">
+                                                      @endforeach
+                                                @endif
+                                            
                                           </div>
                                     </div><!--widget-adver end-->
                                     <div class="widget widget-user">
@@ -107,6 +167,10 @@
                         </div>
                   </div><!--forum-questions-sec end-->
             </div>
+            <template id="template">
+                  <div>{{$details['id']}}</div>
+            </template>
+            
       </section><!--forum-page end-->
 
       {{-- footer --}}

@@ -20,7 +20,7 @@ Route::get('contact','App\Http\Controllers\MembreProfileController@delegues');
 Route::get('zones-voir','App\Http\Controllers\ZoneController@index');
 Route::get('evenements','App\Http\Controllers\EventController@list');
 Route::get('evts-details/{event}','App\Http\Controllers\EventController@voir')->name('details');
-Route::get('post-event','App\Http\Controllers\AdministrationController@event');
+Route::post('add-views','App\Http\Controllers\EventController@addOneView');
 
 Route::get('connexion', function () {
     return view('auth.login');
@@ -29,7 +29,11 @@ Route::get('connexion', function () {
 Route::post('ajouter-zone','App\Http\Controllers\ZoneController@create');
 Route::post('ajouter-membre','App\Http\Controllers\MembreProfileController@create');
 Route::post('ajouter-evenement','App\Http\Controllers\EventController@create');
+Route::post('valider-evenement','App\Http\Controllers\EventController@eventvalidate');
+Route::post('lancer-collecte','App\Http\Controllers\CollectefondController@launchfund');
 Route::post('definir-role','App\Http\Controllers\MembreProfileController@setrole');
+Route::post('mixer-collecte','App\Http\Controllers\CollectefondController@mixeventforfund');
+Route::post('nouvelle-participation','App\Http\Controllers\CollectefondController@addparticipationforfund');
 Route::post('reset-compte','App\Http\Controllers\MembreProfileController@resetaccount');
 Route::post('login','App\Http\Controllers\UserController@connect');
 Route::post('logout','App\Http\Controllers\UserController@deconnect');

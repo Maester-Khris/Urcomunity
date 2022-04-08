@@ -30,28 +30,25 @@
 								<div class="usr_quest">
 									<h3 style="margin-bottom:7px;">{{$event->titre}}</h3>
 									<ul class="react-links" style="margin-bottom:10px;">
-										<li><a href="#" title=""><i class="fa fa-user"></i>{{$event->membre_name}}</a></li>
+										<li><a href="#" title="" style="color:#a8dadc"><i class="fa fa-user" ></i>{{$event->membre_name}}</a></li>
 									</ul>
 									<p style="margin-top:8px;">{{Str::limit($event->description,180)}}</p>
 										<ul class="quest-tags" >
-										<li><a href="{{route('details',[$event->id])}}" title="" style="background:gold;padding-left:12px;padding-right:12px;">Lire la suite</a></li>
+										<li>
+											<a href="{{route('details',[$event->id])}}" title="" style="background:seashell;color:gold;padding-left:12px;padding-right:12px;border-radius:5px;">
+												<span style="margin-right:3px;font-style:italic;font-size:14px;">Lire la suite</span>  
+												<i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 12px"></i>
+												<i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 12px;transform:translateX(-5px);"></i>
+											</a>
+										</li>
 									</ul>
 								</div><!--usr_quest end-->
-								<span class="quest-posted-time"><i class="fa fa-clock-o"></i>{{ date('d-m-Y', strtotime($event->created_at))}}</span>
+								<span class="quest-posted-time" style="color:#3d405b;"><i class="fa fa-clock-o"></i>{{ date('d-m-Y', strtotime($event->created_at))}}</span>
 							</div><!--usr-question end-->
 							@endforeach
 						</div><!--forum-questions end-->
 						<nav aria-label="Page navigation example" class="full-pagi">
-						<ul class="pagination">
-							<li class="page-item"><a class="page-link pvr" href="#">Precedent</a></li>
-							<li class="page-item"><a class="page-link active" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
-							<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item"><a class="page-link" href="#">4</a></li>
-							<li class="page-item"><a class="page-link" href="#">5</a></li>
-							<li class="page-item"><a class="page-link" href="#">6</a></li>
-							<li class="page-item"><a class="page-link pvr" href="#">Suivant</a></li>
-						</ul>
+							{{ $events->links('vendor.pagination.custom') }}
 						</nav>
 					</div>
 						<!-- center pane-->

@@ -10,7 +10,7 @@ class Evenement extends Model
     use HasFactory;
 
     protected $appends = ['membre_name'];
-    protected $fillable = ['titre','qualificatif','description','taux_cautisation','statut'] ;
+    protected $fillable = ['titre','qualificatif','description','nombre_vues','statut'] ;
 
     public function getMembreNameAttribute(){
       return $this->membre->name;

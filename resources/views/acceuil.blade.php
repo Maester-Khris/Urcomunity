@@ -1,10 +1,11 @@
-@extends('layouts.app',['title'=>'Home'])
+@extends('layouts.app',['title'=>'Accueil'])
 
 @section('content')
 
 @php
  $today = new DateTime();
 @endphp
+
 <main>
     <div class="main-section">
         <div class="container">
@@ -108,7 +109,6 @@
                                 <div class="post-st">
                                     <ul>
                                         <li><a class="" href="/evenements" title="">Liste des evenements</a></li>
-                                        <li><a class="active" href="/site-managment" title="">Poster un evenement</a></li>
                                     </ul>
                                 </div>
                                 <!--post-st end-->
@@ -146,13 +146,19 @@
                                         <ul class="job-dt">
                                             <li><a href="#" title="" style="background:grey;">{{$event->membre->zone->localisation}}</a></li>
 
-                                            <li><a href="#" title="">
-                                                {{ $event->statut == 1 ? 'Accepté' : 'Rejeté' }}
+                                           
+                                                @if ($event->date_acceptation == null)
+                                                    <li><a href="#" title="" style="background:#FFEEAD;">En attente de décision</a></li>
+                                                @elseif ($event->date_acceptation != null && $event->statut == 1)
+                                                    <li><a href="#" title="" style="background:#28FFBF;">Accepté</a></li>
+                                                @else
+                                                    <li><a href="#" title="" style="background:#FF6363;">Rejeté</a></li>
+                                                @endif
                                             </a></li>
                                         </ul>
                                         <p>
                                           {{Str::limit($event->description, 150)}}
-                                          <a href="#" title="">voir la suite</a>
+                                          <a href="{{route('details',[$event->id])}}" title="">voir la suite</a>
                                         </p>
                                         <br>
                                         <img src="http://via.placeholder.com/57x57" style="margin-right:8px;" alt="">
@@ -166,12 +172,12 @@
                                @endforeach
 
                                 <!-- <div class="process-comm">
-                                                      <div class="spinner">
-                                                            <div class="bounce1"></div>
-                                                            <div class="bounce2"></div>
-                                                            <div class="bounce3"></div>
-                                                      </div>
-                                                </div> -->
+                                    <div class="spinner">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                    </div>
+                                </div> -->
                                 <!--process-comm loader end-->
 
                             </div>
@@ -233,7 +239,7 @@
     </div>
 </main>
 
-<div class="chatbox-list">
+{{-- <div class="chatbox-list">
     <div class="chatbox">
         <div class="chat-mg bx">
             <a href="#" title=""><img src="images/chat.png" alt=""></a>
@@ -300,7 +306,7 @@
         </div>
         <!--conversation-box end-->
     </div>
-</div>
+</div> --}}
 <!--chatbox-list end-->
 
 <!-- <div class="post-popup pst-pj">

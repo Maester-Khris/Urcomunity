@@ -1,11 +1,11 @@
-@extends('layouts.app',['title'=>'List of Member'])
+@extends('layouts.app',['title'=>'Liste des deleges'])
 
 @section('content')
 
    <section class="companies-info">
          <div class="container">
                <div class="company-title">
-                     <h3>Liste des delegues de zones</h3>
+                     <h3  style="background:aquamarine ;">Liste des delegues de zones</h3>
                </div><!--company-title end-->
                <div class="companies-list">
                      <div class="row">

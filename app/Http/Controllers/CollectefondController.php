@@ -33,7 +33,7 @@ class CollectefondController extends Controller
                "date_lancement" => date("Y-m-d"),
                "delai_envoi_participation" => 3,
                "statut" => "En cours",
-               "montant_cotisation" => ($event->qualificatif == "Heureux") ? 500 : 1000
+               "montant_cotisation" => $request->montant
             ]);
 
             // ajouter le proprietaire de l'event comme beneficiaire de cette collecte

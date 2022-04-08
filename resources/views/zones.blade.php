@@ -1,11 +1,11 @@
-@extends('layouts.app',['title'=>'List of Member'])
+@extends('layouts.app',['title'=>'Liste des zones'])
 
 @section('content')
 
    <section class="companies-info">
          <div class="container">
                <div class="company-title">
-                     <h3>Liste des zones enregistrées</h3>
+                     <h3  style="background:limegreen;">Liste des zones enregistrées</h3>
                </div><!--company-title end-->
                <div class="companies-list">
                      <div class="row">
@@ -15,13 +15,13 @@
                                        <div class="company-up-info">
                                              <img src="http://via.placeholder.com/90x90" alt="">
                                              <h3>{{$zone->localisation}} - {{$zone->identifiant}}</h3>
-                                             <h4>Nombre de membres:
+                                             <h4 style="margin-bottom: 10px;">
                                                 <span class="badge badge-info" style="padding:8px;font-size:14px;">
-                                                  {{count($zone->membres)}}
+                                                      Nombre de membres: {{count($zone->membres)}}
                                                 </span>
                                              </h4>
                                              <ul>
-                                                   <li style=""><a href="#" title="" class="follow" style="padding-left:10px;padding-right:10px;height:30px; line-height:30px;	border-radius: 30px;">
+                                                   <li style=""><a href="#" title="" class="follow" style="font-weight:bold;padding-left:10px;padding-right:10px;height:30px;line-height:30px;background:#FFC107;">
                                                       Num délégué: {{$zone->delegue_num['telephone']}}
                                                    </a></li>
                                              </ul>

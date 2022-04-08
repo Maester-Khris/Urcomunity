@@ -25,6 +25,7 @@ class MembresTableSeeder extends Seeder
                'matricule' => '22A0003YD',
                'deleguate' => true,
                'statut' => 1,
+               'numero_cni' => '1100344483',
                'registered_date' => '2020-08-23',
            ],
            [
@@ -36,6 +37,7 @@ class MembresTableSeeder extends Seeder
                'matricule' => '22A0002BK',
                'deleguate' => false,
                'statut' => 1,
+               'numero_cni' => '113644483',
                'registered_date' => '2020-02-23',
            ],
            [
@@ -47,6 +49,7 @@ class MembresTableSeeder extends Seeder
                'matricule' => '22A0003GE',
                'deleguate' => false,
                'statut' => 0,
+               'numero_cni' => '112457903',
                'registered_date' => '2021-04-13',
            ],
        ]);

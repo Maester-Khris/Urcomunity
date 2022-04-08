@@ -33,22 +33,33 @@ class MembreProfileController extends Controller
           'nouveau_nom' => 'required',
           'nouveau_zone' => 'required',
           'nouveau_telephone' => 'required',
+          'nouveau_cni' => 'required',
           'nouveau_registered_date' => 'required',
           'nouveau_deleguate' => 'required',
       ]);
 
-      $membre = Membre::where('matricule',$request->matricule)->first();
+      // on retire le membre ed l'ancienne zone et supprime l'user y associé au cas echeant
+      $old_membre = Membre::where('matricule',$request->matricule)->first();
+      $user_exist = User::where('name',$old_membre->name)->first();
+      if($user_exist != null ){
+        $user_exist->removeRole($user_exist->roles->first());
+        $user_exist->delete();
+      }
+
+      $membre = new Membre;
       $membre->name = $request['nouveau_nom'];
+      $membre->matricule = $old_membre->matricule;
       $membre->telephone = $request['nouveau_telephone'];
       $membre->deleguate = $request['nouveau_deleguate'];
       $membre->statut = 1;
+      $membre->numero_cni = $request['nouveau_cni'];
       $membre->registered_date = $request['nouveau_registered_date'];
-
-      // $zone = $membre->zone;
-      // $zone->membres()->delete($membre);
-
       $zone2 = Zone::where('localisation',$request['nouveau_zone'])->first();
       $zone2->membres()->save($membre);
+
+      $old_membre->statut = 0;
+      $old_membre->zone()->dissociate();
+      $old_membre->save();
       return redirect('/site-managment');
     }
 
@@ -65,22 +76,19 @@ class MembreProfileController extends Controller
         $email = $email . '@gmail.com';
 
         $user_exist = User::where('name',$request->nom_membre)->first();
-        // dd($user_exist);
         if($user_exist != null ){
-            $user = User::where('name',$request->nom_membre)->first();
-            // revoke role and permission
-            if($user->getRoleNames()->count() >= 1 && $user->getDirectPermissions()->count() >= 1){
-                $role = Role::where('name',$user->getRoleNames())->first();
-                // dd($role);
-                $user->removeRole($role);
-                $user->revokePermissionTo($user->getDirectPermissions());
-            }
+          $user = User::where('name',$request->nom_membre)->first();
+          if($user->getRoleNames()->count() >= 1 && $user->getDirectPermissions()->count() >= 1){
+            $role = Role::where('name',$user->getRoleNames())->first();
+            $user->removeRole($role);
+            $user->revokePermissionTo($user->getDirectPermissions());
+          }
         }else{
-            $user = User::create([
-                'name' => $membre->name,
-                'email' => $email,
-                'password' => Hash::make($membre->matricule),
-            ]);
+          $user = User::create([
+            'name' => $membre->name,
+            'email' => $email,
+            'password' => Hash::make($membre->matricule),
+          ]);
         }
 
         if($request->role_membre == "Delege"){
@@ -112,6 +120,7 @@ class MembreProfileController extends Controller
             'zone' => 'required',
             'telephone' => 'required',
             'deleguate' => 'required',
+            'cni' => 'required',
             'registered_date' => 'required'
         ]);
         $zone = Zone::where('localisation',$request['zone'])->first();
@@ -123,7 +132,8 @@ class MembreProfileController extends Controller
         $membre->deleguate=$request['deleguate'];
         $membre->registered_date=$request['registered_date'];
         $membre->statut=1;
-        $membre->matricule= $this->newMatricule($nb, $zone->identifiant);
+        $membre->numero_cni=$request['cni'];
+        $membre->matricule= $this->newMatricule($nb, $zone->identifiant, $request['registered_date']);
 
         // Saving related model
         $zone->membres()->save($membre);
@@ -131,17 +141,17 @@ class MembreProfileController extends Controller
     }
 
 
-    public function newMatricule($nbr_mem, $iden){
+    public function newMatricule($nbr_mem, $iden, $date){
         // 'y' two digit year vs 'Y' 04 digit year
-        $year = date("y");
+        $year = date_format(date_create($date),"y");
 
         $indice_memb = '';
-        if($nbr < 10){
+        if($nbr_mem < 10){
            $indice_memb = '000';
-        }else if($nbr < 100){
+        }else if($nbr_mem < 100){
            $indice_memb = '00';
         }
-        else if($nbr < 1000){
+        else if($nbr_mem < 1000){
            $indice_memb = '0';
         }else{
            $indice_memb = '';
