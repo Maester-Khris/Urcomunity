@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Evenement;
 use App\Models\User;
+use App\Models\Collectefond;
 
 use Illuminate\Http\Request;
 
@@ -36,22 +37,33 @@ class AccueilController extends Controller
     public function index()
     {
         $manager = User::with(['roles' => function($query){
-            $query->where('name','Administrator');
+            $query->where('name','B_President');
         }])->select('name')->first();
+        if($manager == null){
+            $manager = User::with(['roles' => function($query){
+                $query->where('name','Administrator');
+            }])->select('name')->first();
+        }
+        
 
-        $mem_bureaux = User::with(['roles' => function($query){
+        $bureaux = User::with(['roles' => function($query){
            $query->where('name','LIKE','B%');
-        }])->get();
+        }])->first();
+        if($bureaux->getRoleNames() == null){
+            $mem_bureaux = $bureaux;
+        }else{
+            $mem_bureaux = null;
+        }
 
         $event_abstract = Evenement::orderBy('nombre_vues','desc')->take(3)->select('titre','description','nombre_vues')->get();
-        // dd($mem_bureaux);
-
         $events = Evenement::with('membre.zone')->orderBy('created_at','desc')->get();
+        $collecte_en_cour = Collectefond::with('evenement')->where('statut','En Cours')->first();
 
         return view('acceuil')
             ->with(compact('manager'))
             ->with(compact('mem_bureaux'))
             ->with(compact('event_abstract'))
+            ->with(compact('collecte_en_cour'))
             ->with(compact('events'));
     }
 }

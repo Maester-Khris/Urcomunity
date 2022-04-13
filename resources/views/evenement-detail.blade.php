@@ -1,7 +1,45 @@
-@extends('layouts.app',['title'=>'Event View'])
+@extends('layouts.app',['title'=>'Description de l\'event'])
 
 @push('styles')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<style>
+.usr_img > img{
+width: 60px;
+height: 60px;
+}
+.alter_images > img{
+width: 60px;
+height: 60px;
+}
+
+@media only screen and (min-width: 400px) {
+      .alter_images{
+            display: none;
+      }
+}
+
+@media only screen and (max-width: 400px) {
+      /* For mobile phones: */
+      .profiles-slider{
+            display: none;
+      }
+      .alter_images{
+            display: block;
+      }
+      /* 
+      div.slick-list.draggable {
+            max-height: 300px!important;
+      }
+      div.slick-list img {
+            width: 150px!important;
+            height: 150px!important;
+      } 
+      img.user-profy.slick-slide{
+            max-width: 300px!important;
+            max-height: 250px!important;
+      } */
+}
+</style>
 @endpush
 
 @push('scripts')
@@ -45,7 +83,12 @@
                   }else{
                         console.log("en attente");
                   }   
-            }, 2000);            
+            }, 2000);   
+            
+            $(".slides").slick({
+            autoplay:true,
+            mobileFirst:true,//add this one
+            }
       });
 </script>
 @endpush
@@ -60,9 +103,6 @@
                               <li  class="active"><a href="/evts-details" title="">Description d'un evenement</a></li>
                         </ul>
                   </div><!--forum-links end-->
-                  <div class="forum-links-btn">
-                        <a href="#" title=""><i class="fa fa-bars"></i></a>
-                  </div>
             </div>
       </section>
 
@@ -75,7 +115,11 @@
                                     <div class="forum-post-view">
                                           <div class="usr-question">
                                                 <div class="usr_img">
-                                                      <img src="http://via.placeholder.com/60x60" alt="">
+                                                      @if ($details['membre_photo'] == null)
+                                                      <img src="{{asset('images/user_default.jpg')}}" alt="">
+                                                      @else
+                                                      <img src="{{asset('uploads/profils/' .$details['membre_photo'] )}}" alt="">
+                                                      @endif
                                                 </div>
                                                 <div class="usr_quest">
                                                       <h3>{{$details['titre']}}</h3>
@@ -118,50 +162,17 @@
                                                             <img class="user-profy" src="{{asset('uploads/events/'.$media->url_destination.'')}}" alt="" style="height:300px;width:300px;">
                                                       @endforeach
                                                 @endif
-                                            
+                                          </div>
+                                          <div class="alter_images" >
+                                                @if(count($details['medias']) == 0)
+                                                <img class="user-profy img-thumbnail rounded float-left" src="{{asset('images/event-default1.png')}}" alt="" style="height:100px;width:100px;">
+                                                @else
+                                                      @foreach($details['medias'] as $media)
+                                                      <img class="user-profy img-thumbnail rounded float-left" src="{{asset('uploads/events/'.$media->url_destination.'')}}" alt="..." style="height:100px;width:100px;padding-top:0;padding-right:8px;" >
+                                                      @endforeach
+                                                @endif
                                           </div>
                                     </div><!--widget-adver end-->
-                                    <div class="widget widget-user">
-                                          <h3 class="title-wd">Membres actifs</h3>
-                                          <ul>
-                                                <li>
-                                                      <div class="usr-msg-details">
-                                                            <div class="usr-ms-img">
-                                                                  <img src="http://via.placeholder.com/50x50" alt="">
-                                                            </div>
-                                                            <div class="usr-mg-info">
-                                                                  <h3>Jessica Konguem</h3>
-                                                                  <p>Self Entrepreneur</p>
-                                                            </div><!--usr-mg-info end-->
-                                                      </div>
-                                                      <span><img src="{{asset('images/price1.png')}}" alt="">46</span>
-                                                </li>
-                                                <li>
-                                                      <div class="usr-msg-details">
-                                                            <div class="usr-ms-img">
-                                                                  <img src="http://via.placeholder.com/50x50" alt="">
-                                                            </div>
-                                                            <div class="usr-mg-info">
-                                                                  <h3>John Mechui</h3>
-                                                                  <p>Kraft Arts</p>
-                                                            </div><!--usr-mg-info end-->
-                                                      </div>
-                                                      <span><img src="{{asset('images/price2.png')}}" alt="">39</span>
-                                                </li>
-                                                <li>
-                                                      <div class="usr-msg-details">
-                                                            <div class="usr-ms-img">
-                                                                  <img src="http://via.placeholder.com/50x50" alt="">
-                                                            </div>
-                                                            <div class="usr-mg-info">
-                                                                  <h3>Patrick Bessala</h3>
-                                                                  <p>Civil Administrator</p>
-                                                            </div><!--usr-mg-info end-->
-                                                      </div>
-                                                      <span><img src="{{asset('images/price3.png')}}" alt="">30</span>
-                                                </li>
-                                          </ul>
-                                    </div><!--widget-user end-->
                               </div>
 
                         </div>

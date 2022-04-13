@@ -35,12 +35,11 @@ class AppPermission extends Seeder
 
         // assign role and permission 'super'
         $user = User::create([
-            'name' => 'Plantini Moricho',
-            'email' => 'Plantini@gmail.com',
+            'name' => 'Fire Admin',
+            'email' => 'fire_admin@gmail.com',
             'password' => Hash::make('22A0003YD'),
         ]);
          $user->givePermissionTo($permission3);
          $user->assignRole($role0);
-         $user->assignRole($role2);
     }
 }

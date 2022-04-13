@@ -17,14 +17,14 @@ class MembreProfileController extends Controller
 {
     //
     public function index(){
-        $membres = Membre::all();
+        $membres = Membre::whereNotNull('zone_id')->where('name','!=','Fire Admin')->get();
         return view('profiles', compact('membres'));
     }
 
 
     public function delegues(){
-         $delegues = Membre::where('deleguate',1)->get();
-         return view('delegues', compact('delegues'));
+      $delegues = Membre::where('deleguate',1)->get();
+      return view('delegues', compact('delegues'));
      }
 
      public function resetaccount(Request $request){
@@ -58,6 +58,7 @@ class MembreProfileController extends Controller
       $zone2->membres()->save($membre);
 
       $old_membre->statut = 0;
+      $old_membre->deleguate = 0;
       $old_membre->zone()->dissociate();
       $old_membre->save();
       return redirect('/site-managment');
@@ -121,7 +122,9 @@ class MembreProfileController extends Controller
             'telephone' => 'required',
             'deleguate' => 'required',
             'cni' => 'required',
-            'registered_date' => 'required'
+            'registered_date' => 'required',
+            'filename' => 'required',
+            'filename.*' => 'mimes:png,jpeg,jpg'
         ]);
         $zone = Zone::where('localisation',$request['zone'])->first();
         $nb = Membre::all()->count();
@@ -134,6 +137,12 @@ class MembreProfileController extends Controller
         $membre->statut=1;
         $membre->numero_cni=$request['cni'];
         $membre->matricule= $this->newMatricule($nb, $zone->identifiant, $request['registered_date']);
+        if($request->hasfile('filename')){
+          $extension = $request->file('filename')->getClientOriginalExtension();
+          $filename = time() . '.' .$extension;
+          $request->file('filename')->move('uploads/profils/', $filename);
+          $membre->url_photo= $filename;
+       }
 
         // Saving related model
         $zone->membres()->save($membre);
@@ -196,6 +205,4 @@ class MembreProfileController extends Controller
 
         return  $year . $lettre . $indice_memb . $iden ;
     }
-
-
 }

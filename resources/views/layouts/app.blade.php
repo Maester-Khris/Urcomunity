@@ -28,6 +28,20 @@
             outline: none !important;
             box-shadow: none;
         }
+        @media only screen and (max-width: 400px) {
+            /* For mobile phones: */
+            div.logo {
+                width: 40px!important;
+            }
+            div.brand-title.logo {
+                width: 100px!important;
+                height: 35px!important;
+                text-align: left;
+            }
+            div.brand-title.logo h1 {
+                font-size: 15px!important;
+            }
+        }
     </style>
     @stack('styles')
 </head>
@@ -40,23 +54,23 @@
 
         <header >
             <div class="container">
-                <div class="header-data">
-                    <div class="logo" >
-                        <a href="/" title="" style="position:absolute;top:7px;">
-                            <img src="{{asset('images/01_Icon-Community@2x.png')}}" alt="" style="width:35px; height:35px;">
-                        </a>
+                <div class="header-data d-flex justify-content-between" style="padding:7px 0;">
+                    <div class="d-flex" style="width: 60%;">
+                        <div class="logo d-flex flex-column justify-content-center" style="margin-top: 0px;">
+                            <a href="/" title="" >
+                                <img src="{{asset('images/01_Icon-Community@2x.png')}}" alt="" style="width:35px; height:35px;">
+                            </a>
+                        </div>
+                        <div class="brand-title d-flex flex-column justify-content-center" style="height:35px; width:280px; padding-top:5px;">
+                            <h1 style="font-size:20px;font-weight:bold;font-family:Georgia;color:white;">Kouti Vivre Ensemble</h1>
+                        </div>
                     </div>
-                    <div class="brand-title logo" style="height:35px; width:280px; padding-top:5px;">
-                        <h1 style="font-size:20px;font-weight:bold;font-family:Georgia;color:white;">Kouti Vivre Ensemble</h1>
-                    </div>
-                    <nav>
-
-                    </nav>
+                    
                     
                     <!--menu-btn end-->
                     @if (Auth::user())
                        <div class="user-account" style="width:160px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;border:0;">
-                           <div class="user-info">
+                           <div class="user-info" style="padding: 0;">
                                <img src="http://via.placeholder.com/30x30" alt="">
                                <a href="#" title="">{{ explode(' ',Auth::user()->name)[0]  }}</a>
                            </div>
@@ -68,27 +82,14 @@
                                 </button>
                             </form>
                        </div>
-                       {{-- <div class="user-account"> background:transparent;
-						<div class="user-info">
-							<img src="http://via.placeholder.com/30x30" alt="">
-							<a href="#" title="">John</a>
-                            <button class="btn" style="background: transparent;margin-left:10px; padding:5px; ">
-                                <i class="fa fa-sign-out" style="color:#44AE92;font-size:20px;"></i>
-                            </button>
-						</div>
-				    	</div> --}}
                      @endif
                 </div>
-                <!--header-data end-->
+             
             </div>
         </header>
-        <!--header end-->
 
         @yield('content')
-
-
     </div>
-    <!--theme-layout end-->
 
 
 

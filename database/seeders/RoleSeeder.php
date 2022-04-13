@@ -57,7 +57,6 @@ class RoleSeeder extends Seeder
                 'created_at' =>  date('Y-m-d'),
                 'updated_at' => date('Y-m-d'),
             ]
-
         ]);
     }
 }

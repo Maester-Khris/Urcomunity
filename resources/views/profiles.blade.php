@@ -1,4 +1,13 @@
 @extends('layouts.app',['title'=>'Liste des membres'])
+@push('styles')
+<style>
+.company-up-info > img{
+width: 90px;
+height: 90px;
+}
+</style> 
+@endpush
+
 
 @section('content')
 
@@ -13,7 +22,12 @@
                            <div class="col-lg-3 col-md-4 col-sm-6">
                                  <div class="company_profile_info">
                                        <div class="company-up-info">
-                                             <img src="http://via.placeholder.com/90x90" alt="">
+                                          @if ($membre->url_photo == null)
+                                                <img src="{{asset('images/user_default.jpg')}}" alt="">
+                                          @else
+                                                <img src="{{asset('uploads/profils/'.$membre->url_photo)}}" alt="">
+                                          @endif
+                                             {{-- <img src="http://via.placeholder.com/90x90" alt=""> --}}
                                              <h3>{{$membre->name}}</h3>
                                              <h4 style="margin-bottom: 10px;">
                                                 <span class="badge badge-warning" style="padding:8px;font-size:14px;">

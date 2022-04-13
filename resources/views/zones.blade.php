@@ -20,11 +20,21 @@
                                                       Nombre de membres: {{count($zone->membres)}}
                                                 </span>
                                              </h4>
-                                             <ul>
-                                                   <li style=""><a href="#" title="" class="follow" style="font-weight:bold;padding-left:10px;padding-right:10px;height:30px;line-height:30px;background:#FFC107;">
+                                             <h4>
+                                                <span class="badge badge-secondary" style="padding:8px;font-size:14px;">
+                                                      @if ($zone->delegue_num['telephone'] != null)
+                                                         Délégué: {{$zone->delegue_num['telephone']}}
+                                                      @else
+                                                            Aucun Délégué 
+                                                      @endif
+                                                  
+                                                </span>
+                                             </h4>
+                                             {{-- <ul>
+                                                   <li style=""><a href="#" title="" class="follow" style="font-weight:bold;padding-left:10px;padding-right:10px;height:30px;background:#FFC107;">
                                                       Num délégué: {{$zone->delegue_num['telephone']}}
                                                    </a></li>
-                                             </ul>
+                                             </ul> --}}
                                        </div>
                                  </div><!--company_profile_info end-->
                            </div>

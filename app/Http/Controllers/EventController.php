@@ -16,7 +16,7 @@ class EventController extends Controller
     public function list()
     {
       //  $events = Evenement::all();
-      $events = Evenement::paginate(2);
+      $events = Evenement::paginate(3);
        return view('evenements')->with(compact('events'));
     }
 
@@ -31,15 +31,11 @@ class EventController extends Controller
    }
 
    public function addOneView(Request $request){
-      // $event = Evenement::where('id',intval($request->event_id))->first();
-      // $event = Evenement::where('id',1)->first();
-      // $event->nombre_vues = $event->nombre_vues + 1;
-      // $event->save();
-      // return response()->json(['success'=>"view added"]);
       $id = intval($request->eventid);
-      $evenement = Evenement::find($id);
-      
-      return response()->json(['success'=> $evenement],200);
+      $event = Evenement::find($id);
+      $event->nombre_vues = $event->nombre_vues + 1;
+      $event->save();
+      return response()->json(['success'=>"view added"]);
    }
 
     public function voir(Evenement $event)
@@ -71,6 +67,7 @@ class EventController extends Controller
            "medias" => $medias,
            "membre_name" => $membre->name,
            "membre_zone" => $membre_zone,
+           "membre_photo" => $membre->url_photo
         ];
 
         return view('evenement-detail',compact('details'));

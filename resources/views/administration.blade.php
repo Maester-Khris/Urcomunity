@@ -1,4 +1,4 @@
-@extends('layouts.app',['title'=>'Manage Site'])
+@extends('layouts.app',['title'=>'Administrer le Site'])
 @push('styles')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <link rel="stylesheet" type="text/css" href="{{asset('css/admin.css')}}">
@@ -213,7 +213,7 @@
                         <div class="tab-pane fade" id="nav-status" role="tabpanel" aria-labelledby="nav-status-tab">
                             <div class="acc-setting" style="height:503px;overflow-y:scroll;">
                                 <h3>Ajouter Membres</h3>
-                                <form action="{{url('ajouter-membre')}}" method="POST">
+                                <form action="{{url('ajouter-membre')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="cp-field">
                                         <h5>Nom du Membre</h5>
@@ -253,6 +253,27 @@
                                                 <option value="{{$zone->localisation}}"> {{ $zone->localisation }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="cp-field">
+                                        <h5>Ajouter la photo du membre</h5>
+                                        <div class="form-group">
+                                            <div class="input-group col-md-12">
+                                                <input style="height:38px;width:140px;border-radius:7px 0 0 7px;"
+                                                    id="fakeUploadLogo" class="form-control fake-shadow"
+                                                    placeholder="Selectionner le fichier" disabled="disabled">
+                                                <div class="input-group-btn">
+                                                    <div class="fileUpload btn btn-danger fake-shadow"
+                                                        style="border-radius:0 7px 7px 0!important;">
+                                                        <span><i class="glyphicon glyphicon-upload"></i> Upload
+                                                            image</span>
+                                                        <input class="attachment_upload" id="logo-id" name="filename"
+                                                            type="file" accept="image/png, image/jpeg, image/jpg" >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="help-block" style="margin-top:10px;">* Uploader l'image
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="cp-field">
@@ -537,7 +558,7 @@
                                             <div class="input-group col-md-12">
                                                 <input style="height:38px;width:140px;border-radius:7px 0 0 7px;"
                                                     id="fakeUploadLogo" class="form-control fake-shadow"
-                                                    placeholder="Choose File" disabled="disabled">
+                                                    placeholder="Selectionner les fichiers" disabled="disabled">
                                                 <div class="input-group-btn">
                                                     <div class="fileUpload btn btn-danger fake-shadow"
                                                         style="border-radius:0 7px 7px 0!important;">
@@ -549,7 +570,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="help-block" style="margin-top:10px;">* Upload your products image.
+                                            <p class="help-block" style="margin-top:10px;">* Uploader l'image
                                             </p>
                                         </div>
                                     </div>
@@ -821,7 +842,7 @@
                                                     <table class="data-table participation table stripe hover nowrap">
                                                         <thead>
                                                             <tr>
-                                                                <th class="table-plus datatable-nosort">Matricule</th>
+                                                                <th class="table-plus">Matricule</th>
                                                                 <th>Nom</th>
                                                                 <th>Zone</th>
                                                                 <th>Participation</th>
@@ -829,14 +850,18 @@
                                                         </thead>
                                                         <tbody>
                                                         
-                                                                @if($participants != null)
-                                                                    @foreach($participants as $pt) 
+                                                                @if($participants_final != null)
+                                                                    @foreach($participants_final as $pt) 
                                                                         <tr>
-                                                                            <th scope="row">{{$pt->membre->matricule}}</th>
-                                                                            <td>{{$pt->membre->name}}</td>
-                                                                            <td>{{$pt->membre->zone_name}}</td>
+                                                                            <th scope="row">{{$pt['matricule']}}</th>
+                                                                            <td>{{$pt['name']}}</td>
+                                                                            <td>{{$pt['zone']}}</td>
                                                                             <td class="job-dt">
-                                                                                <li><a href="#" title="">Oui</a></li>
+                                                                                @if ($pt['participation'] == "Oui")
+                                                                                    <li><a href="#" title="">{{$pt['participation']}}</a></li>
+                                                                                @else
+                                                                                    <li><a href="#" title="" style="background: #F55353">{{$pt['participation']}}</a></li>
+                                                                                @endif
                                                                             </td> 
                                                                         </tr>
                                                                     @endforeach
@@ -853,13 +878,13 @@
                                                 <ul class="col-md-12">
                                                     <li style="font-size: 17px;margin-bottom:8px;">- Nombre de participant:
                                                         <strong style="color:#295fa6;font-weight:bold;text-shadow: 3px 5px 6px #0477bf;">
-                                                            {{count($participants)}}
+                                                            {{$nbparticipants}}
                                                         </strong>
                                                     </li>
                                                     <li style="font-size: 17px;">
                                                         - Somme totale recollecte:
                                                         <strong style="color:#248e38;font-weight:bold;text-shadow: 3px 5px 6px #abdca7;">
-                                                            {{ count($participants) * $collecte_en_cour->montant_cotisation }} Fcfa
+                                                            {{ $nbparticipants * $collecte_en_cour->montant_cotisation }} Fcfa
                                                         </strong>
                                                     </li>
                                                 </ul>
@@ -900,8 +925,6 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                            @else 
-                                                <h4>Aucune collecte en cours</h4>
                                             @endif
                                         </div>
                                     </div>

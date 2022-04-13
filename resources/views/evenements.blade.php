@@ -1,4 +1,12 @@
-@extends('layouts.app',['title'=>'Events List'])
+@extends('layouts.app',['title'=>'Liste des Events'])
+@push('styles')
+<style>
+.usr_img > img{
+	width: 60px;
+	height: 60px;
+}
+</style>
+@endpush
 
 @section('content')
 
@@ -10,9 +18,6 @@
 					<!-- <li><a href="/evts-details" title="">Event description</a></li> -->
 				</ul>
 			</div><!--forum-links end-->
-			<div class="forum-links-btn">
-				<a href="#" title=""><i class="fa fa-bars"></i></a>
-			</div>
 		</div>
 	</section>
 
@@ -25,7 +30,11 @@
 							@foreach($events as $event)
 							<div class="usr-question">
 								<div class="usr_img">
-									<img src="http://via.placeholder.com/60x60" alt="">
+									@if ($event->membre->url_photo == null)
+									<img src="{{asset('images/user_default.jpg')}}" alt="">
+									@else
+									<img src="{{asset('uploads/profils/'.$event->membre->url_photo)}}" alt="">
+									@endif
 								</div>
 								<div class="usr_quest">
 									<h3 style="margin-bottom:7px;">{{$event->titre}}</h3>

@@ -1,5 +1,45 @@
 @extends('layouts.app',['title'=>'Accueil'])
 
+@push('styles')
+<style>
+.annonce{
+    animation: marquee 15s linear infinite;
+}
+.marquee-rtl {
+  overflow: hidden;                     
+}
+.usr-pic > img{
+    width: 100px;
+    height: 100px;
+}
+.usy-dt > img{
+    width: 50px;
+    height: 50px;
+}
+.user-profy > img{
+    width: 57px;
+    height: 57px;
+}
+.marquee-rtl > span {
+  padding-bottom: 5px;
+  display: inline-block;                /* modèle de boîte en ligne */
+  color: #51a39b;
+  text-shadow: #A3A3A3 6px 2px 4px;
+  padding-right: 2em;                   /* un peu d'espace pour la transition */
+  padding-left: 100%;                   /* placement à droite du conteneur */
+  white-space: nowrap;                  /* pas de passage à la ligne */
+  animation: defilement-rtl 15s infinite linear;
+}
+@keyframes defilement-rtl {
+  0% {
+    transform: translate3d(0,0,0);      /* position initiale à droite */
+  }
+  100% {
+    transform: translate3d(-100%,0,0);  /* position finale à gauche */
+  }
+}
+</style>
+@endpush
 @section('content')
 
 @php
@@ -21,7 +61,7 @@
                                 <div class="user-profile">
                                     <div class="username-dt">
                                         <div class="usr-pic">
-                                            <img src="http://via.placeholder.com/100x100" alt="">
+                                            <img src="{{asset('images/admin_default.jpg')}}" alt="">
                                         </div>
                                     </div>
                                     <!--username-dt end-->
@@ -63,29 +103,33 @@
                                 <i class="la la-ellipsis-v"></i>
                             </div>
                             <div class="profiles-slider">
-                               @Foreach($mem_bureaux as $bureau)
+                                @if ($mem_bureaux != null)
+                                    @foreach($mem_bureaux as $bureau)
+                                        @php
+                                        $role = preg_split('/"/',$bureau->getRoleNames())[1]
+                                        @endphp
 
-                                  @php
-                                    $role = preg_split('/"/',$bureau->getRoleNames())[1]
-                                  @endphp
+                                        <div class="user-profy">
+                                            @if ($bureau->url_photo == null)
+                                                <img src="{{asset('images/bureau_default2.jpg')}}" alt="">
+                                            @else
+                                                <img src="{{asset('uploads/profils/'.$bureau->url_photo)}}" alt="">
+                                            @endif
 
-                                <div class="user-profy">
-                                    <img src="http://via.placeholder.com/57x57" alt="">
-                                    <h3>{{$bureau->name}}</h3>
-
-
-                                       <span>{{explode('_', $role)[1]}}</span>
+                                            <h3>{{$bureau->name}}</h3>
 
 
-                                    <ul>
-                                        <li><a href="#" title="" class="followw">695347568</a></li>
-                                        <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @endforeach
-                                <!--user-profy end-->
+                                            <span>{{explode('_', $role)[1]}}</span>
 
+
+                                            <ul>
+                                                <li><a href="#" title="" class="followw">695347568</a></li>
+                                                <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                             <!--profiles-slider end-->
                         </div>
@@ -101,13 +145,19 @@
                     <div class="col-lg-6 col-md-8 no-pd">
                         <div class="main-ws-sec">
 
-                            <div class="post-topbar">
+                            <div class="post-topbar marquee-rtl">
+                                @if ($collecte_en_cour != null)
+                                <span>Une nouvelle collecte a été lancé ...</span>
+                                @endif
                                 <div class="user-picy">
                                     <img src="images/de-live_venue3326_admin.png" style="width:50px;height:50px;"
                                         alt="">
                                 </div>
                                 <div class="post-st">
                                     <ul>
+                                        @if ($collecte_en_cour != null)
+                                            <li><a class="" href="/collectes" title="">Voir les participations</a></li>
+                                        @endif
                                         <li><a class="" href="/evenements" title="">Liste des evenements</a></li>
                                     </ul>
                                 </div>
@@ -121,7 +171,11 @@
                                 <div class="post-bar">
                                     <div class="post_topbar">
                                         <div class="usy-dt">
-                                            <img src="http://via.placeholder.com/50x50" alt="">
+                                            @if ($bureau->url_photo == null)
+                                                <img src="{{asset('images/user_default.jpg')}}" alt="">
+                                            @else
+                                                <img src="{{asset('uploads/profils/'.$bureau->url_photo)}}" alt="">
+                                            @endif
                                             <div class="usy-name">
                                                 <h3>{{$event->membre->name}}</h3>
                                                 <span><img src="images/clock.png" alt="">

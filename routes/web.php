@@ -21,6 +21,7 @@ Route::get('zones-voir','App\Http\Controllers\ZoneController@index');
 Route::get('evenements','App\Http\Controllers\EventController@list');
 Route::get('evts-details/{event}','App\Http\Controllers\EventController@voir')->name('details');
 Route::post('add-views','App\Http\Controllers\EventController@addOneView');
+Route::get('collectes','App\Http\Controllers\CollectefondController@index');
 
 Route::get('connexion', function () {
     return view('auth.login');
