@@ -6,7 +6,7 @@
     animation: marquee 15s linear infinite;
 }
 .marquee-rtl {
-  overflow: hidden;                     
+  overflow: hidden;
 }
 .usr-pic > img{
     width: 100px;
@@ -171,10 +171,10 @@
                                 <div class="post-bar">
                                     <div class="post_topbar">
                                         <div class="usy-dt">
-                                            @if ($bureau->url_photo == null)
+                                            @if ($event->membre->url_photo == null)
                                                 <img src="{{asset('images/user_default.jpg')}}" alt="">
                                             @else
-                                                <img src="{{asset('uploads/profils/'.$bureau->url_photo)}}" alt="">
+                                                <img src="{{asset('uploads/profils/'.$event->membre->url_photo)}}" alt="">
                                             @endif
                                             <div class="usy-name">
                                                 <h3>{{$event->membre->name}}</h3>
@@ -200,7 +200,7 @@
                                         <ul class="job-dt">
                                             <li><a href="#" title="" style="background:grey;">{{$event->membre->zone->localisation}}</a></li>
 
-                                           
+
                                                 @if ($event->date_acceptation == null)
                                                     <li><a href="#" title="" style="background:#FFEEAD;">En attente de décision</a></li>
                                                 @elseif ($event->date_acceptation != null && $event->statut == 1)
