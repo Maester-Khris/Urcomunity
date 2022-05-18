@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Evenement;
+use App\Models\Membre;
 use App\Models\User;
 use App\Models\Collectefond;
-
 use Illuminate\Http\Request;
+use App\Services\MemberService;
+use Spatie\Permission\Models\Role;
+
 
 class AccueilController extends Controller
 {
@@ -31,28 +35,35 @@ class AccueilController extends Controller
      * connexion gestion des erreurs
      */
 
-
-
+    private $membres;
+    public function __construct(MemberService $membres)
+    {
+        $this->membres = $membres;
+    }
 
     public function index()
     {
-        $manager = User::with(['roles' => function($query){
-            $query->where('name','B_President');
-        }])->select('name')->first();
+        $manager = User::whereHas('roles', function($query) {
+            $query->where('name','=', 'B_President');
+        })->select('name')->first();
+
         if($manager == null){
             $manager = User::with(['roles' => function($query){
                 $query->where('name','Administrator');
             }])->select('name')->first();
         }
-        
 
-        $bureaux = User::with(['roles' => function($query){
-           $query->where('name','LIKE','B%');
-        }])->first();
-        if($bureaux->getRoleNames() == null){
-            $mem_bureaux = $bureaux;
-        }else{
-            $mem_bureaux = null;
+        $bureaux = User::whereHas('roles', function($query) {
+           $query->where('name','LIKE', 'B_%');
+        })->get();
+
+        $mem_bureaux = collect();
+        foreach($bureaux as $bureau){
+            if($bureau->getRoleNames() != null){
+                $mem_bureaux->push($bureau);
+            }else{
+                $mem_bureaux = null;
+            }
         }
 
         $event_abstract = Evenement::orderBy('nombre_vues','desc')->take(3)->select('titre','description','nombre_vues')->get();

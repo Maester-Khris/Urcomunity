@@ -22,5 +22,20 @@ class ZonesTableSeeder extends Seeder
                'identifiant' => 'YDE',
            ]
        ]);
+
+       DB::table('villages')->insert([
+        [
+            'id' => 1,
+            'nom' => 'Kouti',
+        ],
+        [
+            'id' => 2,
+            'nom' => 'Njiyit',
+        ],
+        [
+            'id' => 3,
+            'nom' => 'Kouchankap',
+        ]
+    ]);
     }
 }

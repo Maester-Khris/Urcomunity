@@ -65,13 +65,13 @@
 										<div class="row">
 											<div class="col-lg-12 no-pdd">
 												<div class="sn-field">
-													<input type="text" name="nom_membre" placeholder="Nom du membre">
+													<input type="text" name="nom_membre" placeholder="Nom du membre" required>
 													<i class="la la-user"></i>
 												</div><!--sn-field end-->
 											</div>
 											<div class="col-lg-12 no-pdd">
 												<div class="sn-field">
-													<input type="password" name="matricule_membre" placeholder="mot de passe (matricule)">
+													<input type="password" name="matricule_membre" placeholder="mot de passe (matricule)" required>
 													<i class="la la-lock"></i>
 												</div>
 											</div>
@@ -99,11 +99,23 @@
 
 								</div>
 								<!-- ========================  Connexion ======================= -->
-
-
-
+								
 
 							</div><!--login-sec end-->
+							@if(Session::has('error_login'))
+								<div  class="container" >
+									<div id="error_message" class="alert alert-danger alert-dismissible fade show" role="alert" style="position:absolute;bottom:25px;left:55px;height:45px;z-index:900;">
+										<i class="fa fa-exclamation" aria-hidden="true" style="color:#df4759;margin-right:10px;font-size:20px;float:left;"></i>
+										<strong></strong> 
+										<span id="notif_body">
+										{{Session::get('error_login') }}
+										</span>
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								</div>
+							@endif
 						</div>
 					</div>
 				</div><!--signin-pop end-->
@@ -128,6 +140,6 @@
 	</div><!--theme-layout end-->
 
       
-
+	<script src="{{ asset('/js/validator.js') }}"></script>
 </body>
 </html>

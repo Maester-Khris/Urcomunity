@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Validator;
 use App\Models\User;
 use App\Models\Membre;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
 
 use Illuminate\Http\Request;
 
@@ -13,22 +15,30 @@ class UserController extends Controller
 {
     //
     public function connect(Request $request){
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nom_membre' => ['required'],
             'matricule_membre' => ['required'],
         ]);
-        $membre = Membre::where('name',$request->nom_membre)->where('matricule',$request->matricule_membre)->first();
-        $user = $membre->user;
-        // dd($user);
-
-        if($request->remember == "yes"){
-            Auth::login($user, $remember = true);
-            $request->session()->regenerate();
-        }else{
-            Auth::login($user);
-            $request->session()->regenerate();
+        if ($validator->fails()) {
+            $transf_error = "Formulaire mal remplie";
+            return back()->with('error_login',$transf_error);
         }
-        return redirect('site-managment');
+
+        $membre = Membre::where('name',$request->nom_membre)->where('matricule',$request->matricule_membre)->first();
+        if($membre == null){
+            $transf_error = "Utilisateur non reconnu, verifier les identifiants";
+            return back()->with('error_login',$transf_error);
+        }else{
+            $user = $membre->user;
+            if($request->remember == "yes"){
+                Auth::login($user, $remember = true);
+                $request->session()->regenerate();
+            }else{
+                Auth::login($user);
+                $request->session()->regenerate();
+            }
+            return redirect('site-managment');
+        }
     }
 
     public function deconnect(Request $request){

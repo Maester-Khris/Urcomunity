@@ -9,11 +9,21 @@ class Membre extends Model
 {
     use HasFactory;
 
-    protected $appends = ['zone_name'];
+    protected $appends = ['zone_name', 'village_name'];
     protected $fillable = ['name','matricule','deleguate','statut','registerd_date'] ;
 
    public function getZoneNameAttribute(){
       return $this->zone->localisation;
+   }
+
+   public function getVillageNameAttribute(){
+      if($this->village_id == 1){
+         return "Kouti";
+      }else if($this->village_id == 2){
+         return "Njiyit";
+      }else{
+         return "Kouchankap";
+      }
    }
 
    public function zone()

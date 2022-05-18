@@ -2,32 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Validator;
 use App\Models\Zone;
+use Illuminate\Http\Request;
+use App\Services\DataService;
+
 
 class ZoneController extends Controller
 {
-    //
+    private $data;
+    public function __construct(DataService $data)
+    {
+        $this->data = $data;
+    }
+
     public function index()
      {
-         $zones = Zone::with('membres')->get();;
-         // dd($zones);
-         return view('zones', compact('zones'));
+        $zones = Zone::with('membres')->get();;
+        return view('zones', compact('zones'));
      }
 
     public function create(Request $request){
-        $request->validate([
+        $validator = Validator::make($request->all(),[
             'localisation' => 'required',
             'identifiant' => 'required',
         ]);
-
+        if ($validator->fails()) {
+            $transf_error = "Formulaire mal remplie";
+            return back()->with('error_menu',$transf_error);
+        }
+        if($this->data->checkZoneExist($request->zone) == true){
+            $transf_error = "une zone avec cet identifiant existe déja";
+            return back()->with('error_menu',$transf_error);
+        }
         Zone::create($request->all());
-
-        // retrieve the zone of a member
-        // $zone = Membre::find(1);
-        // echo $zone->localisation;
-
-
         return redirect('/site-managment');
     }
 }

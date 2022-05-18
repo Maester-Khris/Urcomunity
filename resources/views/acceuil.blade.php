@@ -115,13 +115,8 @@
                                             @else
                                                 <img src="{{asset('uploads/profils/'.$bureau->url_photo)}}" alt="">
                                             @endif
-
                                             <h3>{{$bureau->name}}</h3>
-
-
                                             <span>{{explode('_', $role)[1]}}</span>
-
-
                                             <ul>
                                                 <li><a href="#" title="" class="followw">695347568</a></li>
                                                 <li><a href="#" title="" class="envlp"><img src="images/envelop.png" alt=""></a>

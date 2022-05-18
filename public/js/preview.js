@@ -1,22 +1,21 @@
 $(document).ready(function() {
-    var brand = document.getElementById('logo-id');
-    brand.className = 'attachment_upload';
+    var brand = $("div[id=nav-status] input.logo-id")[ 0 ];
+    brand.className += ' attachment_upload';
     brand.onchange = function() {
         document.getElementById('fakeUploadLogo').value = this.value.substring(12);
     };
 
-    // Source: http://stackoverflow.com/a/4459419/6396981
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+    var brand2 = $("div[id=nav-notification] input.logo-id")[ 0 ];
+    brand2.className += ' attachment_upload';
+    brand2.onchange = function() {
+        document.getElementById('fakeUploadLogo2').value = this.value.substring(12);
+    };
 
-            reader.onload = function(e) {
-                $('.img-preview').attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#logo-id").change(function() {
-        readURL(this);
-    });
+    var brand3 = $("div[id=nav-security-login] input.logo-id")[ 0 ];
+    brand3.className += ' attachment_upload';
+    brand3.onchange = function() {
+        document.getElementById('fakeUploadLogo3').value = this.value.substring(12);
+    };
+
+  
 });

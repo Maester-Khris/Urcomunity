@@ -13,7 +13,7 @@
     position: relative;
     overflow: hidden;
 }
-.fileUpload #logo-id {
+.fileUpload .logo-id {
     position: absolute;
     top: 0;
     right: 0;

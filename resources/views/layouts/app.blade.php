@@ -70,8 +70,8 @@
                     <!--menu-btn end-->
                     @if (Auth::user())
                        <div class="user-account" style="width:160px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;border:0;">
-                           <div class="user-info" style="padding: 0;">
-                               <img src="http://via.placeholder.com/30x30" alt="">
+                           <div class="user-info" style="padding: 0;"> 
+                               <img src="{{asset('uploads/profils/'. Auth::user()->url_photo)}}" alt="" style="height: 30px; width:30px;">
                                <a href="#" title="">{{ explode(' ',Auth::user()->name)[0]  }}</a>
                            </div>
 

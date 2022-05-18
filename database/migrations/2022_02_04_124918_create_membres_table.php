@@ -17,17 +17,20 @@ class CreateMembresTable extends Migration
             $table->increments('id');
             $table->bigInteger('user_id')->nullable()->unsigned();
             $table->integer('zone_id')->nullable()->unsigned();
+            $table->integer('village_id')->unsigned();
             $table->string("name");
             $table->string("matricule");
             $table->string("telephone");
             $table->boolean("deleguate");
             $table->boolean("statut");
             $table->string("numero_cni");
+            $table->integer('partcipation_heureuse')->default(0);
+            $table->integer('partcipation_malheureuse')->default(0);
             $table->string("url_photo")->nullable();
             $table->date("registered_date");
             $table->timestamps();
             $table->foreign('zone_id')->references('id')->on('zones');
-            
+            $table->foreign('village_id')->references('id')->on('villages');
         });
 
         Schema::table('membres', function (Blueprint $table) {

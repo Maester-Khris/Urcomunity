@@ -3,11 +3,13 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <link rel="stylesheet" type="text/css" href="{{asset('css/admin.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('css/preview.css')}}">
+{{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> --}}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <style media="screen">
     td.job-dt {
         padding: 12px 3px;
     }
+
     .job-dt li {
         margin-right: 8px;
     }
@@ -16,52 +18,144 @@
     .dataTables_filter {
         display: none;
     }
-    
-    td,th{
+
+    td,
+    th {
         text-align: center;
     }
-    .role_action{
+
+    .role_action {
         text-align: left;
     }
-    .table_action{
+
+    .table_action {
         display: inline-block
     }
-    .validate_icon{
+
+    .validate_icon {
         font-size: 16px;
         margin-left: 5px;
     }
-    .validate_btn{
+
+    .validate_btn {
         /* color:wheat; */
-        font-size:16px;
-        height:30px;
-        width:auto;
-        padding:0 20px;
-        font-weight:600;
+        font-size: 16px;
+        height: 30px;
+        width: auto;
+        padding: 0 20px;
+        font-weight: 600;
         background: gainsboro;
     }
-    .noty-user-img img{
+
+    .noty-user-img img {
         height: 30px;
         width: 30px;
     }
+
 </style>
 @endpush
 
 @push('scripts')
 <script src="{{ asset('/js/preview.js') }}"></script>
 <script src="{{ asset('/js/postevent.js') }}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script src="{{ asset('/js/validator.js') }}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script> 
 <script src="src/datatable-setting.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
     $(document).ready(function () {
         let table = $(".data-table.participation").DataTable();
         table.page.len(7);
         table.draw();
+        let table2 = $(".data-table.table_zone").DataTable();
+        table2.page.len(4);
+        table2.draw();
+        let _token = $('meta[name="csrf-token"]').attr('content');
+        $("#reset_step1").click(function(e){
+            e.preventDefault();
+            let old_mat = $("#mem_old_matricule").val();
+            let _token = $('meta[name="csrf-token"]').attr('content');
+            let data = {
+                membre_matricule: old_mat,
+                _token: _token
+            };
+            $.ajax({
+                url: "/last-compte-infos",
+                type:"POST",
+                data:data,
+                success:function(response){
+                    if(response) {
+                        console.log(response.last_infos)
+                        $("input#nom").val(response.last_infos.nom);
+                        $("input#telephone").val(response.last_infos.telephone);
+                        $("input#cni").val(response.last_infos.numero_cni);
+                        $("div.step_1").hide();
+                        $("div.step_2").show();
+                    }
+                },
+                error: function(error) {
+                    $("div.step_1 div.alert").show();
+                    // console.log(error);
+                }
+            });
+        });
+        $("#reset_step2").click(function(e){
+            $("div.step_1").show();
+            $("div.step_2").hide();
+        });
+        $("#error_message i").effect( "shake", {distance:5}, {times:4}, 1000 );
+        $("button.close").click(function(e){
+            $("div#error_container").hide();
+        });
+        $(".role_link").click(function(e){
+            e.preventDefault();
+            let role= $(this).find("a span").text();
+            if(role.substr(-1) == "."){
+                role = role.split(".");
+            }
+            let mat = $(this).closest("tr").find('th[scope="row"]').text();
+            let data = {
+                matricule: mat,
+                role: role[0],
+                _token: _token
+            };
+            $.ajax({
+                url: "/remove-role",
+                type:"POST",
+                data:data,
+                success:function(response){
+                    if(response) {
+                        console.log(response)
+                    }
+                }
+            });
+        });
+        $(".activate_link").click(function(e){
+            e.preventDefault();
+            let mat = $(this).closest("tr").find('th[scope="row"]').text();
+            let data = {
+                matricule: mat,
+                _token: _token
+            };
+            $.ajax({
+                url: "/toggle-activate",
+                type:"POST",
+                data:data,
+                success:function(response){
+                    if(response) {
+                        console.log(response)
+                    }
+                }
+            });
+        });
     });
+
 </script>
 <script>
     $('#nav-security-login-tab').click(function () {
         $('.tab-pane').removeClass('show active');
     });
+
 </script>
 <script type="text/javascript">
     $('.fund-item').hide();
@@ -94,12 +188,27 @@
         $(this).closest('.profile-bx-details').hide();
         $('.profile-bx-details').show();
     })
+
 </script>
 @endpush
 
 
 @section('content')
 <section class="profile-account-setting">
+    @if(Session::has('error_menu'))
+    <div id="error_container" class="container" style="max-width: 1270px;margin-left:30px;margin-bottom:25px;">
+        <div id="error_message" class="alert alert-danger alert-dismissible fade show" role="alert" style="position:absolute;top:5px;height:45px;right:79px;z-index:900;">
+            <i class="fa fa-exclamation" aria-hidden="true" style="color:#df4759;margin-right:10px;font-size:20px;float:left;"></i>
+            <strong>Alerte: </strong> 
+            <span id="notif_body">
+                {{Session::get('error_menu') }}
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    @endif
     <div class="container" style="max-width: 1270px;margin-left:30px;">
         <div class="account-tabs-setting" style="padding-top: 30px;">
             <div class="row">
@@ -148,21 +257,20 @@
                             aria-labelledby="nav-acc-tab">
                             <div class="acc-setting" style="min-height:503px;">
                                 <h3>Ajouter Zones</h3>
-                                <form action="{{url('ajouter-zone')}}" method="POST">
+                                <form class="needs-validation" action="{{url('ajouter-zone')}}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4 cp-field" style="margin-top:20px;">
                                             <h5>Nom de la zone</h5>
                                             <div class="cpp-fiel">
-                                                <input type="text" name="localisation" placeholder="Nom complet">
+                                                <input class="form-control" type="text" name="localisation" placeholder="Nom complet" required>
                                                 <i class="fa fa-map-o"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-4 cp-field" style="margin-top:20px;">
                                             <h5>Identifiant de la zone</h5>
                                             <div class="cpp-fiel">
-                                                <input type="text" name="identifiant"
-                                                    placeholder="Identifiant (03 lettres)">
+                                                <input type="text" class="form-control" name="identifiant" placeholder="Identifiant (03 lettres)" maxlength="3" required>
                                                 <i class="fa fa-map-pin"></i>
                                             </div>
                                         </div>
@@ -177,11 +285,12 @@
                                 <div class="pro-work-status" style="padding-left: 0;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="data-table table stripe hover nowrap"
+                                            <table class="data-table table_zone table stripe hover nowrap"
                                                 style="overflow-x: hidden;">
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-plus datatable-nosort" scope="col"style="width:25%">Identifiant</th>
+                                                        <th class="table-plus datatable-nosort" scope="col"
+                                                            style="width:25%">Identifiant</th>
                                                         <th scope="col" style="width: 25%">Localisation</th>
                                                         <th scope="col" style="width: 25%">Nombre de membre</th>
                                                         <th scope="col" style="width: 25%">Actions</th>
@@ -195,7 +304,8 @@
                                                         <td>{{$zone->membres_count}}</td>
                                                         <td class="job-dt">
                                                             <li>
-                                                                <a href="#" title="" style="background:grey;">supprimer</a>
+                                                                <a href="#" title=""
+                                                                    style="background:grey;">supprimer</a>
                                                             </li>
                                                         </td>
                                                     </tr>
@@ -218,21 +328,21 @@
                                     <div class="cp-field">
                                         <h5>Nom du Membre</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="name" placeholder="Nom du nouveau membre">
+                                            <input class="form-control" type="text" name="name" placeholder="Nom du nouveau membre" required>
                                             <i class="fa fa-user"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Numero de telephone</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="telephone" placeholder="Num telephone">
+                                            <input class="form-control" type="text" name="telephone" placeholder="Num telephone: 6xxxxxxxx" minlength="9" maxlength="9" required>
                                             <i class="fa fa-phone"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Numero de CNI</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="cni" placeholder="Num de la carte d'identité">
+                                            <input class="form-control" type="text" name="cni" placeholder="Num de la carte d'identité" required>
                                             <i class="fa fa-address-card"></i>
                                         </div>
                                     </div>
@@ -240,17 +350,30 @@
                                         <h5>Date d'inscription effective <small>(après payement des frais
                                                 d'inscription)</small></h5>
                                         <div class="cpp-fiel">
-                                            <input type="date" name="registered_date">
+                                            <input class="form-control" type="date" name="registered_date" required>
                                             <i class="fa fa-calendar"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Selectionner la zone où le membre reside</h5>
                                         <div class="cpp-fiel">
-                                            <select id="inputState" class="form-control" name="zone">
+                                            <select id="inputState" class="form-control" name="zone" required>
                                                 <option selected>Choose...</option>
                                                 @foreach($zones as $zone)
-                                                <option value="{{$zone->localisation}}"> {{ $zone->localisation }}</option>
+                                                <option value="{{$zone->localisation}}"> {{ $zone->localisation }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="cp-field">
+                                        <h5>Selectionner le village où le membre est attaché</h5>
+                                        <div class="cpp-fiel">
+                                            <select id="inputState" class="form-control" name="village" required>
+                                                <option selected>Choose...</option>
+                                                @foreach($villages as $village)
+                                                <option value="{{$village->nom}}"> {{ $village->nom }}
+                                                </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -267,8 +390,8 @@
                                                         style="border-radius:0 7px 7px 0!important;">
                                                         <span><i class="glyphicon glyphicon-upload"></i> Upload
                                                             image</span>
-                                                        <input class="attachment_upload" id="logo-id" name="filename"
-                                                            type="file" accept="image/png, image/jpeg, image/jpg" >
+                                                        <input class="attachment_upload logo-id" name="filename"
+                                                            type="file" accept="image/png, image/jpeg, image/jpg">
                                                     </div>
                                                 </div>
                                             </div>
@@ -280,14 +403,14 @@
                                         <h5>Est-il delegué de sa zone ?</h5>
                                         <div class="checky-sec">
                                             <div class="fgt-sec" style="margin-right:15px;">
-                                                <input type="radio" name="deleguate" id="c1" value="1">
+                                                <input class="form-control" type="radio" name="deleguate" id="c1" value="1">
                                                 <label for="c1">
                                                     <span></span>
                                                 </label>
                                                 <small>Oui</small>
                                             </div>
                                             <div class="fgt-sec">
-                                                <input type="radio" name="deleguate" id="c2" value="0">
+                                                <input class="form-control" type="radio" name="deleguate" id="c2" value="0">
                                                 <label for="c2">
                                                     <span></span>
                                                 </label>
@@ -304,6 +427,15 @@
                                     </div>
                                     <!--save-stngs end-->
                                 </form>
+                                @if(Session::has('error_menu2'))
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position:absolute;top:5px;height:45px;left:39%;z-index:900;">
+                                    <strong>Alerte !</strong> 
+                                    <span id="notif_body">{{Session::get('error_menu2') }}</span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @endif
                             </div>
                         </div>
 
@@ -316,14 +448,14 @@
                                     <div class="cp-field">
                                         <h5>Entrer le nom de l'utilisateur</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="nom_membre" placeholder="Nom du membre">
+                                            <input class="form-control" type="text" name="nom_membre" placeholder="Nom du membre" required>
                                             <i class="fa fa-user-circle"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Selectionner le role</h5>
                                         <div class="cpp-fiel">
-                                            <select id="inputState" class="form-control" name="role_membre">
+                                            <select id="inputState" class="form-control" name="role_membre" required>
                                                 <option selected>Choisir...</option>
                                                 <optgroup label="Zone">
                                                     <option value="Delege">Delegé de Zone</option>
@@ -331,7 +463,7 @@
                                                 <optgroup label="Bureau Executif">
                                                     @foreach ($bureaux as $bureau)
                                                     <option value="{{$bureau->name}}">
-                                                        Bureux Exe. -  {{explode('_',$bureau->name)[1]}}
+                                                        Bureux Exe. - {{explode('_',$bureau->name)[1]}}
                                                     </option>
                                                     @endforeach
                                                 </optgroup>
@@ -342,7 +474,6 @@
                                                     </option>
                                                     @endforeach
                                                 </optgroup>
-
                                             </select>
                                         </div>
                                     </div>
@@ -352,6 +483,15 @@
                                             <li><button type="submit">Annuler les changements</button></li>
                                         </ul>
                                     </div>
+                                    @if(Session::has('error_menu3'))
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position:absolute;top:5px;height:45px;left:39%;z-index:900;">
+                                        <strong>Alerte !</strong> 
+                                        <span id="notif_body">{{Session::get('error_menu3') }}</span>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @endif
                                     <!--save-stngs end-->
                                 </form>
                             </div>
@@ -362,80 +502,138 @@
                             aria-labelledby="nav-notification-tab">
                             <div class="acc-setting" style="height:503px;overflow-y:scroll;">
                                 <h3>Reinitialiser un compte</h3>
-                                <form action="{{url('reset-compte')}}" method="POST">
+                                <form action="{{url('reset-compte')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="cp-field">
-                                        <h5>Matricule du compte</h5>
-                                        <div class="cpp-fiel">
-                                            <input type="text" name="matricule" placeholder="entrer le matricule">
-                                            <i class="fa fa-id-badge"></i>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Nom et Prenom (Nouveau)</h5>
-                                        <div class="cpp-fiel">
-                                            <input type="text" name="nouveau_nom" placeholder="entrer le Nom complet">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Zone (Nouveau)</h5>
-                                        <div class="cpp-fiel">
-                                            <select id="inputState" class="form-control" name="nouveau_zone">
-                                                <option selected>Choose...</option>
-                                                @foreach($zones as $zone)
-                                                <option value="{{$zone->localisation}}">{{ $zone->localisation }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Numero de telephone (Nouveau)</h5>
-                                        <div class="cpp-fiel">
-                                            <input type="text" name="nouveau_telephone" placeholder="Num telephone">
-                                            <i class="fa fa-phone"></i>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Numero de CNI (Nouveau)</h5>
-                                        <div class="cpp-fiel">
-                                            <input type="text" name="nouveau_cni" placeholder="Num de la carte d'identité">
-                                            <i class="fa fa-address-card"></i>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Date d'inscription effective (Nouveau)</h5>
-                                        <div class="cpp-fiel">
-                                            <input type="date" name="nouveau_registered_date"
-                                                placeholder="Num telephone">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                    <div class="cp-field">
-                                        <h5>Est-il delegué de sa zone ?</h5>
-                                        <div class="checky-sec">
-                                            <div class="fgt-sec" style="margin-right:15px;">
-                                                <input type="radio" name="nouveau_deleguate" id="r1" value="1">
-                                                <label for="r1">
-                                                    <span></span>
-                                                </label>
-                                                <small>Oui</small>
+                                    <div class="step_1">
+                                        <div class="cp-field">
+                                            <h5>Matricule du compte</h5>
+                                            <div class="cpp-fiel">
+                                                <input class="form-control" id="mem_old_matricule" type="text" name="matricule" placeholder="entrer le matricule" required>
+                                                <i class="fa fa-id-badge"></i>
                                             </div>
-                                            <div class="fgt-sec">
-                                                <input type="radio" name="nouveau_deleguate" id="r2" value="0">
-                                                <label for="r2">
-                                                    <span></span>
-                                                </label>
-                                                <small>Non</small>
-                                            </div>
-                                            <!--fgt-sec end-->
+                                        </div>
+                                        <div class="save-stngs pd2">
+                                            <ul>
+                                                <li><button id="reset_step1">
+                                                    Continuer
+                                                    <i class="fa fa-arrow-right" aria-hidden="true" style="margin-left: 8px;"></i>
+                                                </button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none;position:absolute;top:170px;height:45px;left:200px;z-index:900;">
+                                            <strong>Alerte !</strong> 
+                                            <span id="notif_body">Membre non reconnu, verifier le matricule</span>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="save-stngs pd2">
-                                        <ul>
-                                            <li><button type="submit">Enregistrer</button></li>
-                                            <li><button type="submit">Reinitialiser le formulaire</button></li>
-                                        </ul>
+                                    
+                                    <div class="step_2" style="display: none;">
+                                        <div class="cp-field">
+                                            <h5>Nom et Prenom</h5>
+                                            <div class="cpp-fiel">
+                                                <input id="nom" class="form-control" type="text" name="name" placeholder="entrer le Nom complet" required>
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cp-field">
+                                            <h5>Zone</h5>
+                                            <div class="cpp-fiel">
+                                                <select id="inputState" class="form-control" name="zone" required>
+                                                    <option selected>Choose...</option>
+                                                    @foreach($zones as $zone)
+                                                    <option value="{{$zone->localisation}}">{{ $zone->localisation }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="cp-field">
+                                            <h5>Selectionner le village où le membre est attaché</h5>
+                                            <div class="cpp-fiel">
+                                                <select id="inputState" class="form-control" name="village" required>
+                                                    <option selected>Choose...</option>
+                                                    @foreach($villages as $village)
+                                                    <option value="{{$village->nom}}"> {{ $village->nom }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="cp-field">
+                                            <h5>Numero de telephone (Nouveau)</h5>
+                                            <div class="cpp-fiel">
+                                                <input id="telephone" class="form-control" type="text" name="telephone" placeholder="Num telephone" required>
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cp-field">
+                                            <h5>Numero de CNI (Nouveau)</h5>
+                                            <div class="cpp-fiel">
+                                                <input id="cni" class="form-control" type="text" name="cni" placeholder="Num de la carte d'identité" required>
+                                                <i class="fa fa-address-card"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cp-field">
+                                            <h5>Date d'inscription effective (Nouveau)</h5>
+                                            <div class="cpp-fiel">
+                                                <input class="form-control" type="date" name="registered_date" placeholder="Num telephone" required>
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+    
+                                        <div class="cp-field">
+                                            <h5>Ajouter la photo du membre</h5>
+                                            <div class="form-group">
+                                                <div class="input-group col-md-12">
+                                                    <input style="height:38px;width:140px;border-radius:7px 0 0 7px;"
+                                                        id="fakeUploadLogo2" class="form-control fake-shadow"
+                                                        placeholder="Selectionner le fichier" disabled="disabled">
+                                                    <div class="input-group-btn">
+                                                        <div class="fileUpload btn btn-danger fake-shadow"
+                                                            style="border-radius:0 7px 7px 0!important;">
+                                                            <span><i class="glyphicon glyphicon-upload"></i> Upload
+                                                                image</span>
+                                                            <input class="attachment_upload logo-id" name="filename"
+                                                                type="file" accept="image/png, image/jpeg, image/jpg">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p class="help-block" style="margin-top:10px;">* Uploader l'image
+                                                </p>
+                                            </div>
+                                        </div>
+    
+                                        <div class="cp-field">
+                                            <h5>Est-il delegué de sa zone ?</h5>
+                                            <div class="checky-sec">
+                                                <div class="fgt-sec" style="margin-right:15px;">
+                                                    <input class="form-control" type="radio" name="deleguate" id="r1" value="1">
+                                                    <label for="r1">
+                                                        <span></span>
+                                                    </label>
+                                                    <small>Oui</small>
+                                                </div>
+                                                <div class="fgt-sec">
+                                                    <input class="form-control" type="radio" name="deleguate" id="r2" value="0">
+                                                    <label for="r2">
+                                                        <span></span>
+                                                    </label>
+                                                    <small>Non</small>
+                                                </div>
+                                                <!--fgt-sec end-->
+                                            </div>
+                                        </div>
+                                        <div class="save-stngs pd2">
+                                            <ul>
+                                                <li><button id="reset_step2">
+                                                    <i class="fa fa-arrow-left" aria-hidden="true" style="margin-left: 8px;"></i>
+                                                    Rentrer en arriere
+                                                </button></li>
+                                                <li><button type="submit">Enregistrer</button></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <!--save-stngs end-->
                                 </form>
@@ -454,9 +652,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="table-plus datatable-nosort" scope="col" style="width: 10%">Matricule</th>
-                                                        <th scope="col" style="width: 20%">Zone</th>
+                                                        <th scope="col" style="width: 15%">Zone</th>
+                                                        <th scope="col" style="width: 15%">Village</th>
                                                         <th scope="col" style="width: 25%">Noms & prenoms</th>
-                                                        <th scope="col" style="width: 45%">Role & Action</th>
+                                                        <th scope="col" style="width: 40%">Role & Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -464,45 +663,58 @@
                                                     <tr style="position: relative;">
                                                         <th scope="row">{{$membre->matricule}}</th>
                                                         <td>{{$membre->zone_name}}</td>
+                                                        <td>{{$membre->village_name}}</td>
                                                         <td>{{$membre->name}}</td>
                                                         <td class="job-dt role_action">
-                                                            
-                                                            @if($membre->user)
+                                                            {{-- @php
+                                                                dd($membre->user->getRoleNames()->count() );
+                                                            @endphp --}}
+                                                            @if($membre->user && $membre->user->getRoleNames()->count() > 0)
                                                                 @php
-                                                                    $role = preg_split('/"/',$membre->user->getRoleNames())[1]
+                                                                $role = preg_split('/"/',$membre->user->getRoleNames())[1]
                                                                 @endphp
                                                                 @if(explode('_', $role)[0] == 'B')
-                                                                    <li><a href="#" title="" style="background:rgb(9, 179, 179);">B. executif</a></li>
-                                                                    <li>
-                                                                        <a href="#" title="" style="background:#4ece43;"> 
-                                                                            {{ Str::limit(explode('_', $role)[1], 10) }}
+                                                                    <li><a href="#" title="" style="background:rgb(9, 179, 179);">
+                                                                        B. executif
+                                                                    </a></li>
+                                                                    <li class="role_link">
+                                                                        <a href="#" title="" style="background:#4ece43;">
+                                                                            <span style="color:inherit;font-size:inherit;">{{ Str::limit(explode('_', $role)[1], 10) }}</span>
+                                                                            <i class="fa fa-close" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
                                                                         </a>
                                                                     </li>
                                                                 @elseif(explode('_', $role)[0] == 'C')
-                                                                    <li>
-                                                                        <a href="#" title="" style="background:gold;">C. Sage</a>
-                                                                    </li>
-                                                                    <li>
+                                                                    <li><a href="#" title="" style="background:gold;">
+                                                                        C. Sage
+                                                                    </a></li>
+                                                                    <li class="role_link">
                                                                         <a href="#" title="" style="background:#4ece43;">
-                                                                            {{ Str::limit(explode('_', $role)[1], 10) }}
+                                                                            <span style="color:inherit;font-size:inherit;">{{ Str::limit(explode('_', $role)[1], 10) }}</span>
+                                                                            <i class="fa fa-close" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
                                                                         </a>
                                                                     </li>
-                                                                @else
-                                                                    <li>
-                                                                        <a href="#" title="" style="background:#01687b;">Administrateur</a>
-                                                                    </li>
+                                                               
                                                                 @endif
                                                             @endif
 
                                                             @if($membre->deleguate == true)
-                                                                <li><a href="#" title="" style="background:#303281;">Delegué</a></li>
+                                                                <li class="role_link"><a href="#" title="" style="background:#303281;">
+                                                                    <span style="color:inherit;font-size:inherit;">Delegué</span>
+                                                                    <i class="fa fa-close" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
+                                                                </a></li>
                                                             @endif
-                                                            
-                                                            <span class="table_action" >
+
+                                                            <span class="table_action">
                                                                 @if($membre->statut == true)
-                                                                    <li><a href="#" title="" >Actif</a></li>
+                                                                    <li class="activate_link"><a href="#" title="">
+                                                                        Actif
+                                                                        <i class="fa fa-pencil" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
+                                                                    </a></li>
                                                                 @else
-                                                                    <li><a href="#" title="" style="background:grey;">Bloqué</a></li>
+                                                                    <li class="activate_link"><a href="#" title="" style="background:grey;">
+                                                                        Bloqué
+                                                                        <i class="fa fa-pencil" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
+                                                                    </a></li>
                                                                 @endif
                                                             </span>
                                                         </td>
@@ -527,26 +739,25 @@
                                     <div class="cp-field">
                                         <h5>Ajouter un titre a cet evenement </h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="titre" placeholder="Donnez lui un nom">
+                                            <input class="form-control" type="text" name="titre" placeholder="Donnez lui un nom" required>
                                             <i class="fa fa-tag"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Nom du membre concerné par l'evenement</h5>
                                         <div class="cpp-fiel">
-                                            <input type="text" name="membre"
-                                                placeholder="La personne qui à l'evenement">
+                                            <input class="form-control" type="text" name="membre" placeholder="La personne qui à l'evenement" required>
                                             <i class="fa fa-user"></i>
                                         </div>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Saisir une description de l'evenement</h5>
-                                        <textarea name="description"></textarea>
+                                        <textarea name="description" required></textarea>
                                     </div>
                                     <div class="cp-field">
                                         <h5>Qualificatif de l'evenemet</h5>
                                         <div class="cpp-fiel">
-                                            <select id="inputState" class="form-control" name="qualificatif">
+                                            <select id="inputState" class="form-control" name="qualificatif" required>
                                                 <option value="Heureux" selected>Heureux</option>
                                                 <option value="Malheureux">Malheureux</option>
                                             </select>
@@ -557,14 +768,14 @@
                                         <div class="form-group">
                                             <div class="input-group col-md-12">
                                                 <input style="height:38px;width:140px;border-radius:7px 0 0 7px;"
-                                                    id="fakeUploadLogo" class="form-control fake-shadow"
+                                                    id="fakeUploadLogo3" class="form-control fake-shadow"
                                                     placeholder="Selectionner les fichiers" disabled="disabled">
                                                 <div class="input-group-btn">
                                                     <div class="fileUpload btn btn-danger fake-shadow"
                                                         style="border-radius:0 7px 7px 0!important;">
                                                         <span><i class="glyphicon glyphicon-upload"></i> Upload
                                                             Logo</span>
-                                                        <input class="attachment_upload" id="logo-id" name="filenames[]"
+                                                        <input class="attachment_upload logo-id" name="filenames[]"
                                                             type="file" accept="image/png, image/jpeg, image/jpg"
                                                             multiple>
                                                     </div>
@@ -582,6 +793,15 @@
                                     </div>
                                     <!--save-stngs end-->
                                 </form>
+                                @if(Session::has('error_menu6'))
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position:absolute;top:5px;height:45px;left:39%;z-index:900;">
+                                        <strong>Alerte !</strong> 
+                                        <span id="notif_body">{{Session::get('error_menu6') }}</span>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @endif
                             </div>
                         </div>
 
@@ -593,44 +813,52 @@
                                 </h3>
                                 <div class="requests-list">
                                     @if (count($events) >= 1)
-                                        @foreach($events as $evt)
-                                        <div class="request-details">
-                                            <div class="noty-user-img">
-                                                {{-- <img src="http://via.placeholder.com/35x35" alt=""> --}}
-                                                @if ($evt->medias->first() !=null)
-                                                <img src="{{asset('uploads/events/'.$evt->medias->first()->url_destination.'')}}" alt="">
-                                                @else
-                                                <img src="{{asset('images/event-default1.png')}}" alt="">
-                                                @endif
-                                               
-                                            </div>
-                                            <div class="request-info">
-                                                <h3>{{$evt->membre->name}}</h3>
-                                                <span>{{$evt->titre}}</span>
-                                            </div>
-                                            <div class="accept-feat">
-                                                <ul>
-                                                    <li>
-                                                        <button type="submit" class="btn btn-outline-success accept-req validate_btn" style="width:100px;padding-left:10px;padding-right:10px;color:#91C483;" >
-                                                            Accepter <i style="color:#28FFBF;" class="la la-check validate_icon"></i>
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="submit" class="btn btn-outline-danger close-req validate_btn" style="width:90px;padding-left:10px;padding-right:10px;color:#FFAB76;">
-                                                            Rejeter <i style="color:#FF6363;" class="la la-close validate_icon"></i>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                    @foreach($events as $evt)
+                                    <div class="request-details">
+                                        <div class="noty-user-img">
+                                            {{-- <img src="http://via.placeholder.com/35x35" alt=""> --}}
+                                            @if ($evt->medias->first() !=null)
+                                            <img src="{{asset('uploads/events/'.$evt->medias->first()->url_destination.'')}}"
+                                                alt="">
+                                            @else
+                                            <img src="{{asset('images/event-default1.png')}}" alt="">
+                                            @endif
+
                                         </div>
-                                        @endforeach
+                                        <div class="request-info">
+                                            <h3>{{$evt->membre->name}}</h3>
+                                            <span>{{$evt->titre}}</span>
+                                        </div>
+                                        <div class="accept-feat">
+                                            <ul>
+                                                <li>
+                                                    <button type="submit"
+                                                        class="btn btn-outline-success accept-req validate_btn"
+                                                        style="width:100px;padding-left:10px;padding-right:10px;color:#91C483;">
+                                                        Accepter <i style="color:#28FFBF;"
+                                                            class="la la-check validate_icon"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button type="submit"
+                                                        class="btn btn-outline-danger close-req validate_btn"
+                                                        style="width:90px;padding-left:10px;padding-right:10px;color:#FFAB76;">
+                                                        Rejeter <i style="color:#FF6363;"
+                                                            class="la la-close validate_icon"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                     @else
-                                        <div class="request-details nothings"
-                                            style="height:390px;display:flex;flex-direction:row;justify-content:center;align-items:center;">
-                                            <div class="request-info">
-                                                <h2 style="font-weight:bold;">Aucun Evenement en attente de Validation !!</h2>
-                                            </div>
+                                    <div class="request-details nothings"
+                                        style="height:390px;display:flex;flex-direction:row;justify-content:center;align-items:center;">
+                                        <div class="request-info">
+                                            <h2 style="font-weight:bold;">Aucun Evenement en attente de Validation !!
+                                            </h2>
                                         </div>
+                                    </div>
                                     @endif
                                 </div>
                                 <!--requests-list end-->
@@ -725,7 +953,7 @@
 
                                 <!-- fonction crown fund-->
                                 <div class="" style="margin-top:15px;float:left;">
-                                    <!--lancer cotisation /OK--> 
+                                    <!--lancer cotisation /OK-->
                                     <div class="pro-work-status fund-item op1" style="padding-bottom:20px;">
                                         <h4 style="margin-bottom:7px;color:#e44d3a;">Nouvelle collecte de fond </h4>
                                         <form action="{{url('lancer-collecte')}}" method="POST">
@@ -735,8 +963,8 @@
                                                     style="padding-left:10px;margin-top:10px;">
                                                     <h5>Titre de l'evenement</h5>
                                                     <div class="cpp-fiel" style="margin-top:8px;margin-bottom:17px;">
-                                                        <input type="text" name="titre"
-                                                            placeholder="Rechercher l'evenement">
+                                                        <input class="form-control" type="text" name="titre"
+                                                            placeholder="Rechercher l'evenement" required>
                                                         <i class="fa fa-tag" aria-hidden="true"></i>
                                                     </div>
                                                 </div>
@@ -744,14 +972,15 @@
                                                     style="padding-left:10px;margin-top:10px;">
                                                     <h5>Somme Cotisation</h5>
                                                     <div class="cpp-fiel" style="margin-top:8px;margin-bottom:17px;">
-                                                        <input type="number" name="montant"
-                                                            placeholder="montant">
+                                                        <input class="form-control" type="number" name="montant" placeholder="montant" required>
                                                         <i class="fa fa-money" aria-hidden="true"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5"></div>
-                                                <button class="btn btn-primary"style="background-color:#17c3b2;border:0;">
-                                                    Lancer <i class="fa fa-arrow-right" aria-hidden="true" style="margin-left: 8px;"></i>
+                                                <button class="btn btn-primary"
+                                                    style="background-color:#17c3b2;border:0;">
+                                                    Lancer <i class="fa fa-arrow-right" aria-hidden="true"
+                                                        style="margin-left: 8px;"></i>
                                                 </button>
                                             </div>
                                         </form>
@@ -759,72 +988,84 @@
 
                                     <!--jumuler event sur cotisation /OK-->
                                     <div class="pro-work-status fund-item op2" style="padding-bottom:20px;">
-                                        <h4 style="margin-bottom:15px;color:#e44d3a;">Ajouter un evenement a une collecte en cours </h4>
+                                        <h4 style="margin-bottom:15px;color:#e44d3a;">Ajouter un evenement a une
+                                            collecte en cours </h4>
                                         <form action="{{url('mixer-collecte')}}" method="POST">
                                             @csrf
                                             <div class="row">
-                                                <div class="cp-field col-md-7" style="padding-left:10px;margin-top:0px;">
+                                                <div class="cp-field col-md-7"
+                                                    style="padding-left:10px;margin-top:0px;">
                                                     <div class="cpp-fiel">
-                                                        <select id="inputState" class="form-control" name="collecte">
-                                                            <option selected>Selectionner une collecte en cours ...</option>
+                                                        <select id="inputState" class="form-control" name="collecte" required>
+                                                            <option selected>Selectionner une collecte en cours ...
+                                                            </option>
                                                             @foreach($collectes as $collecte)
-                                                                <option value="{{$collecte->id}}">Collecte pour
-                                                                    {{ Str::limit($collecte->event_titre,20) }}
-                                                                </option>
+                                                            <option value="{{$collecte->id}}">Collecte pour
+                                                                {{ Str::limit($collecte->event_titre,20) }}
+                                                            </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6"></div>
-                                                <div class="cp-field col-md-7" style="padding-left:10px;margin-top:18px;margin-bottom:17px;">
+                                                <div class="cp-field col-md-7"
+                                                    style="padding-left:10px;margin-top:18px;margin-bottom:17px;">
                                                     <div class="cpp-fiel">
-                                                        <select id="inputState" class="form-control" name="nouvel_event">
-                                                            <option selected>Selectionner l'evenement à rajouter ...</option>
+                                                        <select id="inputState" class="form-control" name="nouvel_event" required>
+                                                            <option selected>Selectionner l'evenement à rajouter ...
+                                                            </option>
                                                             @foreach($eventforfunds as $evt)
-                                                                <option value="{{$evt->titre}}">
-                                                                    {{ Str::limit($evt->titre, 30) }}
-                                                                </option>
+                                                            <option value="{{$evt->titre}}">
+                                                                {{ Str::limit($evt->titre, 30) }}
+                                                            </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <button class="btn btn-primary" style="margin-left:10px;background-color:#17c3b2;border:0;">
-                                                Jumuler <i class="fa fa-handshake-o" aria-hidden="true" style="margin-left: 8px;"></i>
+                                            <button class="btn btn-primary"
+                                                style="margin-left:10px;background-color:#17c3b2;border:0;">
+                                                Jumuler <i class="fa fa-handshake-o" aria-hidden="true"
+                                                    style="margin-left: 8px;"></i>
                                             </button>
                                         </form>
                                     </div>
 
                                     <!--enregister new participation /OK-->
                                     <div class="pro-work-status fund-item op3" style="padding-bottom:20px;">
-                                        <h4 style="margin-bottom:15px;color:#e44d3a;">Enregistre nouvelle participation</h4>
+                                        <h4 style="margin-bottom:15px;color:#e44d3a;">Enregistre nouvelle participation
+                                        </h4>
                                         <form action="{{url('nouvelle-participation')}}" method="POST">
                                             @csrf
                                             <div class="row">
                                                 <div class="cp-field col-md-7" style="padding-left:10px;margin-top:8px;">
                                                     <div class="cpp-fiel">
-                                                        <input type="text" name="membre" placeholder="Rechercher le membre">
-                                                        <i class="fa fa-user-plus"></i>
+                                                        <input class="form-control" type="text" name="membre_matricule"
+                                                            placeholder="Entrer le matricule du membre" required>
+                                                        <i class="fa fa-id-badge"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-7"></div>
-                                                <div class="cp-field col-md-7" style="padding-left:10px;margin-top:10px;margin-bottom:17px;">
+                                                <div class="cp-field col-md-7"
+                                                    style="padding-left:10px;margin-top:10px;margin-bottom:17px;">
                                                     <div class="cpp-fiel">
-                                                        <select id="inputState" class="form-control" name="collecte">
+                                                        <select id="inputState" class="form-control" name="collecte" required>
                                                             <option selected>Selectionner une collecte en cours ...
                                                             </option>
                                                             @foreach($collectes as $collecte)
-                                                                <option value="{{$collecte->id}}">Collecte pour
-                                                                    {{ Str::limit($collecte->event_titre,20) }}
-                                                                </option>
+                                                            <option value="{{$collecte->id}}">Collecte pour
+                                                                {{ Str::limit($collecte->event_titre,20) }}
+                                                            </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-primary" style="margin-left:10px;background-color:#17c3b2;border:0;">
-                                                Ajouter <i class="fa fa-gift" aria-hidden="true" style="margin-left:8px;font-size:18px;"></i>
+                                            <button class="btn btn-primary"
+                                                style="margin-left:10px;background-color:#17c3b2;border:0;">
+                                                Ajouter <i class="fa fa-gift" aria-hidden="true"
+                                                    style="margin-left:8px;font-size:18px;"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -833,61 +1074,69 @@
                                     <div class="pro-work-status fund-item op4" style="padding-bottom:20px;">
                                         <div class="row" style="float:left;">
                                             <h4 class="col-md-12" style="margin-bottom:15px;color:#e44d3a;">
-                                                <i class="fa fa-long-arrow-left" aria-hidden="true" style="color:#e44d3a;margin-right:10px;cursor:pointer;"></i>
+                                                <i class="fa fa-long-arrow-left" aria-hidden="true"
+                                                    style="color:#e44d3a;margin-right:10px;cursor:pointer;"></i>
                                                 Liste des participations pour la cotisation de
                                             </h4>
 
                                             @if($collecte_en_cour != null)
-                                                <div class="col-md-12">
-                                                    <table class="data-table participation table stripe hover nowrap">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="table-plus">Matricule</th>
-                                                                <th>Nom</th>
-                                                                <th>Zone</th>
-                                                                <th>Participation</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        
-                                                                @if($participants_final != null)
-                                                                    @foreach($participants_final as $pt) 
-                                                                        <tr>
-                                                                            <th scope="row">{{$pt['matricule']}}</th>
-                                                                            <td>{{$pt['name']}}</td>
-                                                                            <td>{{$pt['zone']}}</td>
-                                                                            <td class="job-dt">
-                                                                                @if ($pt['participation'] == "Oui")
-                                                                                    <li><a href="#" title="">{{$pt['participation']}}</a></li>
-                                                                                @else
-                                                                                    <li><a href="#" title="" style="background: #F55353">{{$pt['participation']}}</a></li>
-                                                                                @endif
-                                                                            </td> 
-                                                                        </tr>
-                                                                    @endforeach
+                                            <div class="col-md-12">
+                                                <table class="data-table participation table stripe hover nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="table-plus">Matricule</th>
+                                                            <th>Nom</th>
+                                                            <th>Zone</th>
+                                                            <th>Participation</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @if($participants_final != null)
+                                                        @foreach($participants_final as $pt)
+                                                        <tr>
+                                                            <th scope="row">{{$pt['matricule']}}</th>
+                                                            <td>{{$pt['name']}}</td>
+                                                            <td>{{$pt['zone']}}</td>
+                                                            <td class="job-dt">
+                                                                @if ($pt['participation'] == "Oui")
+                                                                <li><a href="#" title="">{{$pt['participation']}}</a>
+                                                                </li>
+                                                                @else
+                                                                <li><a href="#" title=""
+                                                                        style="background: #F55353">{{$pt['participation']}}</a>
+                                                                </li>
                                                                 @endif
-                                                            
-                                                            
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <!--end table end-->
-                                                <h3 class="col-md-12"style="margin-top:7px;margin-bottom:8px;color:#e44d3a;font-size:16px;font-weight:bold;">
-                                                    Statistique
-                                                </h3>
-                                                <ul class="col-md-12">
-                                                    <li style="font-size: 17px;margin-bottom:8px;">- Nombre de participant:
-                                                        <strong style="color:#295fa6;font-weight:bold;text-shadow: 3px 5px 6px #0477bf;">
-                                                            {{$nbparticipants}}
-                                                        </strong>
-                                                    </li>
-                                                    <li style="font-size: 17px;">
-                                                        - Somme totale recollecte:
-                                                        <strong style="color:#248e38;font-weight:bold;text-shadow: 3px 5px 6px #abdca7;">
-                                                            {{ $nbparticipants * $collecte_en_cour->montant_cotisation }} Fcfa
-                                                        </strong>
-                                                    </li>
-                                                </ul>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                        @endif
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!--end table end-->
+                                            <h3 class="col-md-12"
+                                                style="margin-top:7px;margin-bottom:8px;color:#e44d3a;font-size:16px;font-weight:bold;">
+                                                Statistique
+                                            </h3>
+                                            <ul class="col-md-12">
+                                                <li style="font-size: 17px;margin-bottom:8px;">- Nombre de participant:
+                                                    <strong
+                                                        style="color:#295fa6;font-weight:bold;text-shadow: 3px 5px 6px #0477bf;">
+                                                        {{$nbparticipants}}
+                                                    </strong>
+                                                </li>
+                                                <li style="font-size: 17px;">
+                                                    - Somme totale recollecte:
+                                                    <strong
+                                                        style="color:#248e38;font-weight:bold;text-shadow: 3px 5px 6px #abdca7;">
+                                                        {{ $nbparticipants * $collecte_en_cour->montant_cotisation }}
+                                                        Fcfa
+                                                    </strong>
+                                                </li>
+                                            </ul>
                                             @endif
 
                                         </div>
@@ -897,42 +1146,53 @@
                                     <div class="pro-work-status fund-item op5" style="padding-bottom:20px;">
                                         <div class="row" style="float:left;">
                                             <h4 class="col-md-12" style="margin-bottom:15px;color:#e44d3a;">
-                                                <i class="fa fa-long-arrow-left" aria-hidden="true" style="color:#e44d3a;margin-right:10px;cursor:pointer;"></i>
+                                                <i class="fa fa-long-arrow-left" aria-hidden="true"
+                                                    style="color:#e44d3a;margin-right:10px;cursor:pointer;"></i>
                                                 Liste des beneficiaires de cette cotisation
                                             </h4>
                                             @if($collecte_en_cour != null)
-                                                <div class="col-md-12">
-                                                    <table class="data-table table stripe hover nowrap">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col" style="width: 25%">Matricule Memb.</th>
-                                                                <th scope="col" style="width: 25%">Nom du Membre</th>
-                                                                <th scope="col" style="width: 25%">Numero de Cni</th>
-                                                                <th scope="col" style="width: 25%">Zone</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @if($beneficiaires != null)
-                                                                @foreach($beneficiaires as $bf)
-                                                                    <tr>
-                                                                        <th scope="row">{{$bf->membre->matricule}}</th>
-                                                                        <td>{{$bf->membre->name}}</td>
-                                                                        <td>{{$bf->membre->numero_cni}}</td>
-                                                                        <td>{{$bf->membre->zone_name}}</td>
-                                                                    </tr>
-                                                                @endforeach
-                                                            @endif
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                            <div class="col-md-12">
+                                                <table class="data-table table stripe hover nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="width: 25%">Matricule Memb.</th>
+                                                            <th scope="col" style="width: 25%">Nom du Membre</th>
+                                                            <th scope="col" style="width: 25%">Numero de Cni</th>
+                                                            <th scope="col" style="width: 25%">Zone</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if($beneficiaires != null)
+                                                        @foreach($beneficiaires as $bf)
+                                                        <tr>
+                                                            <th scope="row">{{$bf->membre->matricule}}</th>
+                                                            <td>{{$bf->membre->name}}</td>
+                                                            <td>{{$bf->membre->numero_cni}}</td>
+                                                            <td>{{$bf->membre->zone_name}}</td>
+                                                        </tr>
+                                                        @endforeach
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             @endif
                                         </div>
                                     </div>
 
+                                    @if(Session::has('error_menu8'))
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position:absolute;top:280px;left:474px!important;height:45px;z-index:900;">
+                                        <strong>Alerte !</strong> 
+                                        <span id="notif_body">{{Session::get('error_menu8') }}</span>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="tab-pane fade" id="nav-blockking" role="tabpanel"
                             aria-labelledby="nav-blockking-tab">
                             <div class="acc-setting" style="min-height:503px;">
@@ -998,144 +1258,3 @@
 {{-- footer --}}
 @include('layouts.footer')
 @endsection
-
-{{-- <div class="col-md-3">
-    <button type="button" class="btn btn-outline-warning" disabled>
-        Participants
-        <span class="badge badge-light"   style="padding:10px;font-size:14px;"> --}}
-{{-- {{count($participants)}} --}}
-{{-- </span>
-    </button>
-</div>
-<div class="col-md-3">
-    <button type="button" class="btn btn-outline-success" disabled>
-        Somme recollectée
-        <span class="badge badge-light" style="padding:10px;font-size:14px;"> --}}
-{{-- {{$collecte_en_cour->evenement->qualificatif == "Heureux" ? count($participants)*500 :  count($participants)*1000}}
---}}
-{{-- </span>
-    </button>
-</div>  --}}
-{{-- @else --}}
-{{-- <h4>Aucune collecte en cours</h4> --}}
-{{-- @endif --}}
-
-{{-- ====================================================================================================================================== --}}
-
-{{-- <table class="table"> --}}
-{{-- <thead class="" style="background:#E44D3A">
-    <tr>
-        <th scope="col" style="width: 20%">Matricule Memb.</th>
-        <th scope="col" style="width: 30%">Nom du Membre</th>
-        <th scope="col" style="width: 25%">Zone</th>
-        <th scope="col" style="width: 25%">Partcipation</th>
-    </tr>
-</thead> --}}
-{{-- <tbody> --}}
-{{-- @if($participants != null)
-    @foreach($participants as $pt) --}}
-{{-- <tr> --}}
-{{-- <th scope="row">{{$pt->membre->matricule}}</th>
-<td>{{$pt->membre->name}}</td>
-<td>{{$pt->membre->zone_name}}</td>
-<td class="job-dt">
-    <li><a href="#" title="">Oui</a>
-    </li>
-</td> --}}
-{{-- </tr> --}}
-{{-- @endforeach
-    @endif --}}
-{{-- </tbody> --}}
-{{-- </table> --}}
-
-
-{{-- <tr>
-    <th scope="row">junior</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">downey</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">Robin</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">junior</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">downey</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">Robin</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">junior</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">downey</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">Robin</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">junior</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">downey</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">Robin</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">junior</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">downey</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr>
-<tr>
-    <th scope="row">Robin</th>
-    <td>Martin</td>
-    <td>marechal</td>
-    <td>ferran</td>
-</tr> --}}

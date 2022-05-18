@@ -28,18 +28,21 @@ class AppPermission extends Seeder
         $role0 = Role::create(['name' => 'Administrator']);
         $role1 = Role::create(['name' => 'Delege']);
         $role2 = Role::create(['name' => 'B_President']);
-        $role3 = Role::create(['name' => 'C_President']);
+        $role3 = Role::create(['name' => 'B_Secretairegenerale']);
         $role4 = Role::create(['name' => 'B_Chargecommunication']);
-        $role5 = Role::create(['name' => 'B_Membre']);
-        $role6 = Role::create(['name' => 'C_Membre']);
+        $role5 = Role::create(['name' => 'B_Commissairecompte']);
+        $role6 = Role::create(['name' => 'C_President']);
+        $role7 = Role::create(['name' => 'C_PresidentHonneur']);
+        $role8 = Role::create(['name' => 'C_Conseiller']);
 
         // assign role and permission 'super'
         $user = User::create([
             'name' => 'Fire Admin',
             'email' => 'fire_admin@gmail.com',
-            'password' => Hash::make('22A0003YD'),
+            'url_photo' => '1549823220.png',
+            'password' => Hash::make('22A0000YD'),
         ]);
-         $user->givePermissionTo($permission3);
-         $user->assignRole($role0);
+        $user->givePermissionTo($permission3);
+        $user->assignRole($role0);
     }
 }

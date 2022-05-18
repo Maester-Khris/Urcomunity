@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Zone;
 use App\Models\Membre;
+use App\Models\Village;
 use App\Models\Evenement;
 use App\Models\Collectefond;
 use App\Models\Participantcollecte;
@@ -66,6 +67,7 @@ class AdministrationController extends Controller
    {
       // variable par ordre d'utilisation
       $zones = Zone::withCount('membres')->orderBy('localisation','asc')->get();
+      $villages = Village::orderBy('nom','asc')->get();
       $bureaux = Role::where('name','LIKE','B%')->select("name")->get();
       $sages = Role::where('name','LIKE','C%')->select("name")->get();
       $membres = Membre::with('user')->whereNotNull('zone_id')->where('name','!=','Fire Admin')->get();
@@ -94,6 +96,7 @@ class AdministrationController extends Controller
 
       return view('administration')
          ->with(compact('zones'))
+         ->with(compact('villages'))
          ->with(compact('bureaux'))
          ->with(compact('sages'))
          ->with(compact('membres'))

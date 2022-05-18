@@ -73,6 +73,7 @@ height: 60px;
 </script>
 <script type="text/javascript">
       $(document).ready(function() {
+            console.log("chargé")
             var checkLoaded = setInterval(function() {
                   var $template = $('#template');
                   var node = $template.prop('content');
@@ -88,7 +89,7 @@ height: 60px;
             $(".slides").slick({
             autoplay:true,
             mobileFirst:true,//add this one
-            }
+            });
       });
 </script>
 @endpush
