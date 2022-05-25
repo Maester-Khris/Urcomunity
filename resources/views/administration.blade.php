@@ -64,6 +64,9 @@
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
     $(document).ready(function () {
+        let memtable = $(".data-table.member-table").DataTable({ 
+            order: [[1, 'asc']],
+        });
         let table = $(".data-table.participation").DataTable();
         table.page.len(7);
         table.draw();
@@ -647,20 +650,22 @@
                                 <div class="pro-work-status" style="padding-left: 0;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="data-table table stripe hover nowrap"
+                                            <table class="data-table member-table table stripe hover nowrap"
                                                 style="overflow-x: hidden;">
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-plus datatable-nosort" scope="col" style="width: 10%">Matricule</th>
-                                                        <th scope="col" style="width: 15%">Zone</th>
-                                                        <th scope="col" style="width: 15%">Village</th>
-                                                        <th scope="col" style="width: 25%">Noms & prenoms</th>
+                                                        <th scope="col" style="width: 3%"></th>
+                                                        <th class="table-plus" scope="col" style="width: 10%">Matricule</th>
+                                                        <th scope="col" style="width: 14%">Zone</th>
+                                                        <th scope="col" style="width: 14%">Village</th>
+                                                        <th scope="col" style="width: 24%">Noms & prenoms</th>
                                                         <th scope="col" style="width: 40%">Role & Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($membres as $membre)
+                                                    @foreach ($membres as $key => $membre)
                                                     <tr style="position: relative;">
+                                                        <th>{{$key +1}} - </th>
                                                         <th scope="row">{{$membre->matricule}}</th>
                                                         <td>{{$membre->zone_name}}</td>
                                                         <td>{{$membre->village_name}}</td>

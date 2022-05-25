@@ -74,17 +74,60 @@ class MemberService{
     $zone->membres()->save($membre);
 
     if($membre->deleguate == true){
-      $email = Str::limit($membre->name,7);
-      $email = $email . '@gmail.com';
-      $user = User::create([
-        'name' => $membre->name,
-        'email' => $email,
-        'url_photo' => $membre->url_photo,
-        'password' => Hash::make($membre->matricule),
-      ]);
-      $this->grantRoleToexistinguser($user, "Delege");
-      $membre->user_id = $user->id;
-      $membre->save();
+      $this->newDelege($membre);
+    }
+  }
+
+  /**
+   * get form input
+   * check if name changed, if true check if user exist and drop user with his role
+   * set new fields
+   * check if zone changed, if true dissaciate from last zone and save into new one
+   * if delege, grant delege role
+  */
+  public function resetMemb($input, $file){
+    $village = Village::where('nom',$input['village'])->first();
+    $old_membre = Membre::where('matricule', $input['matricule'])->first();
+    
+    // check new name
+    if($input['name'] != $old_membre->name){
+      $user_exist = User::where('name', $old_membre->name)->first();
+      if ($user_exist != null) {
+        $old_membre->user()->dissociate();
+        $old_membre->user_id = null;
+        $old_membre->save();
+        $user_exist->removeRole($user_exist->roles->first());
+        $user_exist->delete();
+      }
+    }
+    
+    // set new field
+    $old_membre->name=$input['name'];
+    $old_membre->village_id=$village->id;
+    $old_membre->telephone=$input['telephone'];
+    $old_membre->deleguate=$input['deleguate'];
+    $old_membre->registered_date=$input['registered_date'];
+    $old_membre->statut=1;
+    $old_membre->numero_cni=$input['cni'];
+
+    if($file != null){
+      $extension = $file['filename']->getClientOriginalExtension();
+      $filename = time() . '.' .$extension;
+      $file['filename']->move('uploads/profils/', $filename);
+      $old_membre->url_photo= $filename;
+    }
+    $old_membre->save();
+
+    // check new zone
+    if($input['zone'] != $old_membre->zone->localisation){
+      $new_zone = Zone::where('localisation',$input['zone'])->first();
+      $old_membre->zone()->dissociate();
+      $new_zone->membres()->save($old_membre);
+    }
+
+    // grant delege role 
+    if($input['deleguate'] == true){
+      $this->newDelege($membre);
     }
   }
 
@@ -108,6 +151,7 @@ class MemberService{
       return 0; 
     }
   }
+
 
 /**
  * =======================================================
@@ -155,6 +199,20 @@ class MemberService{
     if($input['role_membre'] == "Delege"){
       $membre->deleguate = 1;
     }
+    $membre->user_id = $user->id;
+    $membre->save();
+  }
+
+  public function newDelege(Membre $membre){
+    $email = Str::limit($membre->name,7);
+    $email = $email . '@gmail.com';
+    $user = User::create([
+      'name' => $membre->name,
+      'email' => $email,
+      'url_photo' => $membre->url_photo,
+      'password' => Hash::make($membre->matricule),
+    ]);
+    $this->grantRoleToexistinguser($user, "Delege");
     $membre->user_id = $user->id;
     $membre->save();
   }
@@ -223,6 +281,7 @@ class MemberService{
       return 00;
     }
   }
+
 
 /**
  * =======================================================
