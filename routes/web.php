@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+// use View;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +13,10 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('policy', function () {
+    return view('policy');
+    // dd("entrer");
+});
 Route::get('accueil','App\Http\Controllers\AccueilController@index');
 Route::get('site-managment','App\Http\Controllers\AdministrationController@index')->middleware('admin');;
 Route::get('membres-voir','App\Http\Controllers\MembreProfileController@index');
@@ -53,6 +57,7 @@ Route::post('logout','App\Http\Controllers\UserController@deconnect');
 Route::get('/', function () {
     return redirect('accueil');
 });
+
 if (App::environment('production')) {
     URL::forceScheme('https');
 }

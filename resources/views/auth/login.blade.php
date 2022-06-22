@@ -104,7 +104,7 @@
 							</div><!--login-sec end-->
 							@if(Session::has('error_login'))
 								<div  class="container" >
-									<div id="error_message" class="alert alert-danger alert-dismissible fade show" role="alert" style="position:absolute;bottom:25px;left:55px;height:45px;z-index:900;">
+									<div id="error_message" class="alert alert-danger alert-dismissible fade show" role="alert" style="position:absolute;bottom:25px;left:25px;height:45px;z-index:900;">
 										<i class="fa fa-exclamation" aria-hidden="true" style="color:#df4759;margin-right:10px;font-size:20px;float:left;"></i>
 										<strong></strong> 
 										<span id="notif_body">

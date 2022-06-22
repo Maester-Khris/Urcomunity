@@ -29,7 +29,8 @@ class AdministrationController extends Controller
             FROM participantcollectes 
             WHERE participantcollectes.collectefond_id = :collecte
          )
-         AND zone_id IS NOT NULL;
+         AND zone_id IS NOT NULL
+         AND name <> 'Fire Admin ';
       ", ['collecte' => $idcollecte]);
 
       $membres = collect();

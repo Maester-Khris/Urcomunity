@@ -9,34 +9,29 @@
     td.job-dt {
         padding: 12px 3px;
     }
-
     .job-dt li {
         margin-right: 8px;
     }
-
-    .dataTables_length,
-    .dataTables_filter {
+    .dataTables_length, .dataTables_filter {
         display: none;
     }
-
-    td,
-    th {
+    .dataTables_filter{
+        /* margin-bottom: 5px; */
+        transform: translateY(-40px);
+    }
+    td,th {
         text-align: center;
     }
-
     .role_action {
         text-align: left;
     }
-
     .table_action {
         display: inline-block
     }
-
     .validate_icon {
         font-size: 16px;
         margin-left: 5px;
     }
-
     .validate_btn {
         /* color:wheat; */
         font-size: 16px;
@@ -46,12 +41,10 @@
         font-weight: 600;
         background: gainsboro;
     }
-
     .noty-user-img img {
         height: 30px;
         width: 30px;
     }
-
 </style>
 @endpush
 
@@ -64,9 +57,7 @@
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
     $(document).ready(function () {
-        let memtable = $(".data-table.member-table").DataTable({ 
-            order: [[1, 'asc']],
-        });
+        let tablemem = $(".member-table").prev().show();
         let table = $(".data-table.participation").DataTable();
         table.page.len(7);
         table.draw();
@@ -288,7 +279,7 @@
                                 <div class="pro-work-status" style="padding-left: 0;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="data-table table_zone table stripe hover nowrap"
+                                            <table class="data-table table_zone table stripe hover nowrap table_nosearch"
                                                 style="overflow-x: hidden;">
                                                 <thead>
                                                     <tr>
@@ -1086,7 +1077,7 @@
 
                                             @if($collecte_en_cour != null)
                                             <div class="col-md-12">
-                                                <table class="data-table participation table stripe hover nowrap">
+                                                <table class="data-table participation table stripe hover nowrap table_nosearch">
                                                     <thead>
                                                         <tr>
                                                             <th class="table-plus">Matricule</th>
@@ -1157,7 +1148,7 @@
                                             </h4>
                                             @if($collecte_en_cour != null)
                                             <div class="col-md-12">
-                                                <table class="data-table table stripe hover nowrap">
+                                                <table class="data-table table stripe hover nowrap table_nosearch">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col" style="width: 25%">Matricule Memb.</th>

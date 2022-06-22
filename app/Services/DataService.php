@@ -104,4 +104,14 @@ class DataService
       }
       return $membres;
     }
+
+      public function checkEligibility(){
+          /***
+           * A la fin d'une collecte (statut = terminé et diff(date_debut et aujourd'hui)=3 )
+           * on recupere tout ceux qui n'on pas participé (id membre n'existant pas dans participation collecte)
+           * if echec = 0, echec <= 1, sanction  <= 2
+           * if echec = 1, echec <= 2, sanction  <= 2
+           * if echec = 0, echec <= 1, sanction  <= 2
+           */
+      }
 }

@@ -45,7 +45,7 @@ class CollectefondController extends Controller
          $collect_error = "Impossible de lancer une collecte!, Collecte trouvée pour cet evenement";
          return back()->with('error_menu',$collect_error);
       }else if($result == 3){
-         $collect_error = "Impossible de lancer une collecte!, Evenement non reconnu";
+         $collect_error = "Impossible de lancer une collecte!, Evenement non reconnu ou rejeté";
          return back()->with('error_menu',$collect_error);
       }
 
@@ -93,7 +93,7 @@ class CollectefondController extends Controller
          $fund = Collectefond::find($request->collecte);
          $event = Evenement::find($fund->evenement_id);
          $membre = Membre::where('matricule',$request->membre_matricule)->first();
-         $result = $this->eventservice->checkMemberEligibleForFund($membre, $event);
+         $result = $this->eventservice->checkMemberEligibleForFund($membre, $event, $fund);
 
          if($fund->statut == 'En cours'){
             if($result == "11" || $result == "12"){
@@ -114,7 +114,7 @@ class CollectefondController extends Controller
                $collect_error = "Désolé, ce membre n'est pas eligble, veuillez respecter les criteres";
                return back()->with('error_menu',$collect_error);
             }else{
-               $collect_error = "Désolé, ce membre est desactivé donc pas eligible";
+               $collect_error = "Désolé, ce membre est desactivé ou a déja participé";
                return back()->with('error_menu',$collect_error);
             }
          }else{

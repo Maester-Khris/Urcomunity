@@ -43,6 +43,7 @@ class AccueilController extends Controller
 
     public function index()
     {
+        
         // ==================================
         
         $manager = User::whereHas('roles', function($query) {

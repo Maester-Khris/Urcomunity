@@ -25,7 +25,9 @@ class UserController extends Controller
         }
 
         $membre = Membre::where('name',$request->nom_membre)->where('matricule',$request->matricule_membre)->first();
-        if($membre == null){
+        // cherche si il existe un user avec ce nom et si il a des roles
+        $user_exist = User::where('name',  $membre->name)->first();
+        if($user_exist == null || $user_exist->getRoleNames()->count() == 0){
             $transf_error = "Utilisateur non reconnu, verifier les identifiants";
             return back()->with('error_login',$transf_error);
         }else{

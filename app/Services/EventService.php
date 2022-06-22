@@ -7,6 +7,7 @@ use App\Models\Zone;
 use App\Models\Membre;
 use App\Models\Evenement;
 use App\Models\Collectefond;
+use App\Models\Participantcollecte;
 use Illuminate\Support\Facades\DB;
 
 class EventService{
@@ -68,24 +69,37 @@ class EventService{
      * 12: eligble pour cotisation malheureuse
      * 0: membre non participant
     */
-    public function checkMemberEligibleForFund(Membre $membre, Evenement $event){
+    public function checkMemberEligibleForFund(Membre $membre, Evenement $event, Collectefond $fund){
         $today = new DateTime();
         $date_inscription = new DateTime($membre->registered_date);
         $interval = $date_inscription->diff($today);
-        $final_days = $interval->format('%m');
+        $final_year = $interval->format('%m');
+        $final_month = $interval->format('%m');
         
+        if($final_year >= 1){
+            $final_month = $final_month + (12 * $final_year);
+        }
+  
         if($membre->zone_id == null || $membre->statut == 0){
             return "0";
         }
+
+        $test_existing_participation = Participantcollecte::where('collectefond_id',$fund->id)
+        ->where('membre_id',$membre->id)
+        ->first();
+        if($test_existing_participation != null){
+            return "0";
+        }
+
         if($event->qualificatif == "Heureux"){
-            if($final_days >= 3 && $membre->partcipation_heureuse >= 6){
+            if($final_month >= 3 && $membre->partcipation_heureuse >= 6){
                 return "11";
             }else{
                 return "01";
             }
         }
         else if($event->qualificatif == "Malheureux"){
-            if($final_days >= 2 && $membre->partcipation_malheureuse >= 3){
+            if($final_month >= 2 && $membre->partcipation_malheureuse >= 3){
                 return "12";
             }else{
                 return "02";
@@ -128,7 +142,8 @@ class EventService{
               FROM participantcollectes 
               WHERE participantcollectes.collectefond_id = :collecte
            )
-           AND zone_id IS NOT NULL;
+           AND zone_id IS NOT NULL
+           AND name <> 'Fire Admin ';
         ", ['collecte' => $idcollecte]);
   
         $membres = collect();

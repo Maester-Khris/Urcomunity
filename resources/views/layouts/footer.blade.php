@@ -4,8 +4,7 @@
                   <ul>
                         <li><a href="/zones-voir" title="">Zones</a></li>
                         <li><a href="/membres-voir" title="">Membres</a></li>
-                        <li><a href="#" title="">Regles du groupe</a></li>
-                        <li><a href="#" title="">A propos de la communauté</a></li>
+                        <li><a href="/policy" title="">Regles du groupe</a></li>
                         <li><a href="/contact" title="">Contacter un delegué</a></li>
                   </ul>
                   <!-- <p><img src="images/copy-icon2.png" alt="">Copyright 2018</p>
