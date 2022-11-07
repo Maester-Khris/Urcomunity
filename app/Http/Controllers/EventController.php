@@ -43,7 +43,11 @@ class EventController extends Controller
          $memb_error = "Membre non reconnu, verifiez le nom";
          return back()->with('error_menu',$memb_error);
       }
-
+      $eligibility = $this->eventservice->checkMembEligibleForEvent($request->membre, $request->qualificatif);
+      if(($request->qualificatif == "Heureux" && $eligibility == "01") || ($request->qualificatif == "Malheureux" && $eligibility == "02")){
+         $memb_error = "Membre pas encore eligbile pour ce type d'evenement";
+         return back()->with('error_menu',$memb_error);
+      }
       $this->eventservice->newEvent($request->input(), $request->file());
       return redirect('/site-managment');
    }

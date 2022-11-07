@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class Admin
+class Chatroom
 {
     /**
      * Handle an incoming request.
@@ -17,9 +17,7 @@ class Admin
     public function handle(Request $request, Closure $next)
     {
         if(auth()->user()){
-            if(auth()->user()->getRoleNames()->count() == 0){
-                dd("you dont have admin role to enter in");
-            }
+            // dd('yo');
             return $next($request);
         }
         return redirect('connexion');

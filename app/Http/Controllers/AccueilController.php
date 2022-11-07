@@ -46,15 +46,17 @@ class AccueilController extends Controller
         
         // ==================================
         
-        $manager = User::whereHas('roles', function($query) {
-            $query->where('name','=', 'B_President');
-        })->select('name')->first();
+        // $manager = User::whereHas('roles', function($query) {
+        //     $query->where('name','=', 'B_President');
+        // })->select('name')->first();
 
-        if($manager == null){
-            $manager = User::with(['roles' => function($query){
-                $query->where('name','Administrator');
-            }])->select('name')->first();
-        }
+        $manager = User::where('name','Fire Admin')->first();
+
+        // if($manager == null){
+        //     $manager = User::with(['roles' => function($query){
+        //         $query->where('name','Administrator');
+        //     }])->first();
+        // }
 
         $bureaux = User::whereHas('roles', function($query) {
            $query->where('name','LIKE', 'B_%');

@@ -9,6 +9,7 @@ use App\Models\Evenement;
 use App\Models\Collectefond;
 use App\Models\Participantcollecte;
 use Illuminate\Support\Facades\DB;
+use App\Services\DataService;
 
 class EventService{
 
@@ -69,49 +70,48 @@ class EventService{
      * 12: eligble pour cotisation malheureuse
      * 0: membre non participant
     */
-    public function checkMemberEligibleForFund(Membre $membre, Evenement $event, Collectefond $fund){
-        $today = new DateTime();
-        $date_inscription = new DateTime($membre->registered_date);
-        $interval = $date_inscription->diff($today);
-        $final_year = $interval->format('%m');
-        $final_month = $interval->format('%m');
-        
-        if($final_year >= 1){
-            $final_month = $final_month + (12 * $final_year);
-        }
-  
+
+    
+    public function checkMemberEligibleForFundParticipation(Membre $membre, Evenement $event, Collectefond $fund){
         if($membre->zone_id == null || $membre->statut == 0){
             return "0";
         }
 
-        $test_existing_participation = Participantcollecte::where('collectefond_id',$fund->id)
-        ->where('membre_id',$membre->id)
-        ->first();
+        $test_existing_participation = Participantcollecte::where('collectefond_id',$fund->id)->where('membre_id',$membre->id)->first();
         if($test_existing_participation != null){
             return "0";
         }
 
         if($event->qualificatif == "Heureux"){
-            if($final_month >= 3 && $membre->partcipation_heureuse >= 6){
-                return "11";
-            }else{
-                return "01";
-            }
+            return '11' ;
+        }elseif($event->qualificatif == "Malheureux"){
+            return '12';
         }
-        else if($event->qualificatif == "Malheureux"){
-            if($final_month >= 2 && $membre->partcipation_malheureuse >= 3){
-                return "12";
-            }else{
-                return "02";
+
+    }
+
+    public function checkMembEligibleForEvent($membre_name, $qualif_event){
+        $membre = Membre::where('name', $membre_name)->whereNotNull('zone_id')->where('statut',1)->first();
+        if($membre){
+            $today = new DateTime();
+            $date_inscription = new DateTime($membre->registered_date);
+            $interval = $date_inscription->diff($today);
+            $final_year = $interval->format('%m');
+            $final_month = $interval->format('%m');
+            if($final_year >= 1){
+                $final_month = $final_month + (12 * $final_year);
+            }
+
+            if($qualif_event == "Heureux"){
+                return $final_month >= 3 && $membre->partcipation_heureuse >= 6 ? '11' : '01';
+            }
+            else if($qualif_event == "Malheureux"){
+                return $final_month >= 2 && $membre->partcipation_heureuse >= 3 ? '12' : '02';
             }
         }
     }
 
-    /**
-     * 1: eligible
-     * 2: existing fund found for this event
-     * 3: event not foun
-    */
+    /** * 1: eligible * 2: existing fund found for this event* 3: event not foun */
     public function checkEventEligibleForFund($titre){
         $event = Evenement::where('titre',$titre)->whereNotNull('date_acceptation')->where('statut',1)->first();
         if($event != null){

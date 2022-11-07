@@ -51,6 +51,11 @@ class Membre extends Model
       return $this->hasOne(Role::class);
    }
 
+   public function messages()
+   {
+      return $this->hasMany(Chat::class);
+   }
+
    public function user()
    {
       return $this->belongsTo(User::class);

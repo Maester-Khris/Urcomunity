@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    //
+    public function loginpage(){
+        return view('auth.login');
+    }
+
     public function connect(Request $request){
         $validator = Validator::make($request->all(), [
             'nom_membre' => ['required'],
@@ -25,21 +28,29 @@ class UserController extends Controller
         }
 
         $membre = Membre::where('name',$request->nom_membre)->where('matricule',$request->matricule_membre)->first();
-        // cherche si il existe un user avec ce nom et si il a des roles
         $user_exist = User::where('name',  $membre->name)->first();
+
         if($user_exist == null || $user_exist->getRoleNames()->count() == 0){
             $transf_error = "Utilisateur non reconnu, verifier les identifiants";
             return back()->with('error_login',$transf_error);
         }else{
-            $user = $membre->user;
             if($request->remember == "yes"){
-                Auth::login($user, $remember = true);
+                Auth::login($membre->user, $remember = true);
                 $request->session()->regenerate();
             }else{
-                Auth::login($user);
+                Auth::login($membre->user);
                 $request->session()->regenerate();
             }
-            return redirect('site-managment');
+
+            $mem_names = explode(' ', $membre->name);
+            $mem_name = $mem_names[0] .' '. $mem_names[1];
+            session()->put('membre_id', $membre->id);
+            session()->put('membre_name', $mem_name);
+
+            return redirect()->route('accueil')->with('message', 'Connexion réussi.');
+            // return redirect('site-managment');
+            // dd("url: ". back());
+            // return back();
         }
     }
 

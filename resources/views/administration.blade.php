@@ -651,23 +651,24 @@
                                                         <th scope="col" style="width: 14%">Village</th>
                                                         <th scope="col" style="width: 24%">Noms & prenoms</th>
                                                         <th scope="col" style="width: 40%">Role & Action</th>
+                                                        <th scope="col" style="width: 40%">Participations</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($membres as $key => $membre)
+                                                    @foreach ($membrewithpartici as $key => $membreobj)
                                                     <tr style="position: relative;">
                                                         <th>{{$key +1}} - </th>
-                                                        <th scope="row">{{$membre->matricule}}</th>
-                                                        <td>{{$membre->zone_name}}</td>
-                                                        <td>{{$membre->village_name}}</td>
-                                                        <td>{{$membre->name}}</td>
+                                                        <th scope="row">{{$membreobj->membre->matricule}}</th>
+                                                        <td>{{$membreobj->membre->zone_name}}</td>
+                                                        <td>{{$membreobj->membre->village_name}}</td>
+                                                        <td>{{$membreobj->membre->name}}</td>
                                                         <td class="job-dt role_action">
                                                             {{-- @php
                                                                 dd($membre->user->getRoleNames()->count() );
                                                             @endphp --}}
-                                                            @if($membre->user && $membre->user->getRoleNames()->count() > 0)
+                                                            @if($membreobj->membre->user && $membreobj->membre->user->getRoleNames()->count() > 0)
                                                                 @php
-                                                                $role = preg_split('/"/',$membre->user->getRoleNames())[1]
+                                                                $role = preg_split('/"/',$membreobj->membre->user->getRoleNames())[1]
                                                                 @endphp
                                                                 @if(explode('_', $role)[0] == 'B')
                                                                     <li><a href="#" title="" style="background:rgb(9, 179, 179);">
@@ -693,7 +694,7 @@
                                                                 @endif
                                                             @endif
 
-                                                            @if($membre->deleguate == true)
+                                                            @if($membreobj->membre->deleguate == true)
                                                                 <li class="role_link"><a href="#" title="" style="background:#303281;">
                                                                     <span style="color:inherit;font-size:inherit;">Delegué</span>
                                                                     <i class="fa fa-close" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
@@ -701,7 +702,7 @@
                                                             @endif
 
                                                             <span class="table_action">
-                                                                @if($membre->statut == true)
+                                                                @if($membreobj->membre->statut == true)
                                                                     <li class="activate_link"><a href="#" title="">
                                                                         Actif
                                                                         <i class="fa fa-pencil" aria-hidden="true" style="font-size:13px;margin-left:3px;" ></i>
@@ -713,6 +714,21 @@
                                                                     </a></li>
                                                                 @endif
                                                             </span>
+                                                        </td>
+                                                        <td style="text-align: left;">
+                                                            @foreach ($membreobj->participations as $participation)
+                                                                @if ($participation == 1)
+                                                                <i class="fa fa-check" aria-hidden="true" style="color:#91C483;margin-right:3px;"></i>
+                                                                @else
+                                                                <i class="fa fa-times" aria-hidden="true" style="color:#e44d3a;margin-right:3px;"></i>
+                                                                @endif
+                                                            @endforeach
+                                                            {{-- <i class="fa fa-check" aria-hidden="true" style="color:#91C483;margin-right:3px;"></i>
+                                                            <i class="fa fa-times" aria-hidden="true" style="color:#e44d3a;margin-right:3px;"></i>
+                                                            <i class="fa fa-times" aria-hidden="true" style="color:#e44d3a;margin-right:3px;"></i>
+                                                            <i class="fa fa-times" aria-hidden="true" style="color:#e44d3a;margin-right:3px;"></i>
+                                                            <i class="fa fa-check" aria-hidden="true" style="color:#91C483;margin-right:3px;"></i>
+                                                            <i class="fa fa-check" aria-hidden="true" style="color:#91C483;margin-right:3px;"></i> --}}
                                                         </td>
                                                     </tr>
                                                     @endforeach

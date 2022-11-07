@@ -28,6 +28,7 @@ class CreateMembresTable extends Migration
             $table->integer('partcipation_malheureuse')->default(0);
             $table->string("url_photo")->nullable();
             $table->date("registered_date");
+            $table->integer('penalites')->default(0);
             $table->timestamps();
             $table->foreign('zone_id')->references('id')->on('zones');
             $table->foreign('village_id')->references('id')->on('villages');

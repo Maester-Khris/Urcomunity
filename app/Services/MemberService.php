@@ -186,6 +186,7 @@ class MemberService{
       }
 
     }else{
+      
       $user = User::create([
         'name' => $membre->name,
         'email' => $email,

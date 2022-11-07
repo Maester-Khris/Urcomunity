@@ -51,6 +51,13 @@
         <div class="container">
             <div class="main-section-data">
                 <div class="row">
+                    @if(session('message'))
+                        <div class="alert alert-success">
+                            <strong>Success!</strong> You should <a href="#" class="alert-link">read this message</a>.
+                        </div>
+                    @endif
+                </div>
+                <div class="row">
 
                     <!--=========== Section =============
                                                       LEFT PANE
@@ -61,12 +68,14 @@
                                 <div class="user-profile">
                                     <div class="username-dt">
                                         <div class="usr-pic">
-                                            <img src="{{asset('images/admin_default.jpg')}}" alt="">
+                                            {{-- <img src="{{asset('images/admin_default.jpg')}}" alt=""> --}}
+                                            <img src="{{asset('uploads/profils/'.$manager->url_photo)}}" alt=""> 
                                         </div>
                                     </div>
                                     <!--username-dt end-->
                                     <div class="user-specs">
                                         <h3>{{$manager->name}}</h3>
+                                        {{-- <h3>MEFIRE SOULE</h3> --}}
                                         <span>Administrateur du site</span>
                                     </div>
                                 </div>
@@ -245,10 +254,10 @@
                         <div class="right-sidebar">
                             <div class="widget widget-about">
                                 <img src="images/01_Icon-Community@2x.png" alt="" style="width:45px; height:65px;">
-                                <h3>Venez decouvrir</h3>
-                                <span>Jetez un coup d'oeil</span>
-                                <div class="sign_link" <h3><a href="#" title="">Inscription</a></h3>
-                                    <!-- <a href="#" title="">Learn about us</a> -->
+                                <h3>Messagerie</h3>
+                                <span>Echangez avec vos proches</span>
+                                <div class="sign_link"> 
+                                    <a href="/messagerie" title="">Chat en ligne</a>
                                 </div>
                             </div>
                             <!--widget-about end-->
@@ -287,180 +296,5 @@
         </div>
     </div>
 </main>
-
-{{-- <div class="chatbox-list">
-    <div class="chatbox">
-        <div class="chat-mg bx">
-            <a href="#" title=""><img src="images/chat.png" alt=""></a>
-            <span>2</span>
-        </div>
-        <div class="conversation-box">
-            <div class="con-title">
-                <h3>Messages</h3>
-                <a href="#" title="" class="close-chat"><i class="la la-minus-square"></i></a>
-            </div>
-            <div class="chat-list">
-                <div class="conv-list active">
-                    <div class="usrr-pic">
-                        <img src="http://via.placeholder.com/50x50" alt="">
-                        <span class="active-status activee"></span>
-                    </div>
-                    <div class="usy-info">
-                        <h3>John Doe</h3>
-                        <span>Lorem ipsum dolor <img src="images/smley.png" alt=""></span>
-                    </div>
-                    <div class="ct-time">
-                        <span>1:55 PM</span>
-                    </div>
-                    <span class="msg-numbers">2</span>
-                </div>
-                <div class="conv-list">
-                    <div class="usrr-pic">
-                        <img src="http://via.placeholder.com/50x50" alt="">
-                    </div>
-                    <div class="usy-info">
-                        <h3>John Doe</h3>
-                        <span>Lorem ipsum dolor <img src="images/smley.png" alt=""></span>
-                    </div>
-                    <div class="ct-time">
-                        <span>11:39 PM</span>
-                    </div>
-                </div>
-                <div class="conv-list">
-                    <div class="usrr-pic">
-                        <img src="http://via.placeholder.com/50x50" alt="">
-                    </div>
-                    <div class="usy-info">
-                        <h3>John Doe</h3>
-                        <span>Lorem ipsum dolor <img src="images/smley.png" alt=""></span>
-                    </div>
-                    <div class="ct-time">
-                        <span>0.28 AM</span>
-                    </div>
-                </div>
-            </div>
-            <!--chat-list end-->
-            <div class="typing-msg">
-                <form>
-                    <textarea placeholder="Type a message here"></textarea>
-                    <button type="submit"><i class="fa fa-send"></i></button>
-                </form>
-                <ul class="ft-options">
-                    <li><a href="#" title=""><i class="la la-smile-o"></i></a></li>
-                    <li><a href="#" title=""><i class="la la-camera"></i></a></li>
-                    <li><a href="#" title=""><i class="fa fa-paperclip"></i></a></li>
-                </ul>
-            </div>
-            <!--typing-msg end-->
-        </div>
-        <!--conversation-box end-->
-    </div>
-</div> --}}
-<!--chatbox-list end-->
-
-<!-- <div class="post-popup pst-pj">
-      <div class="post-project">
-            <h3>Post a project</h3>
-            <div class="post-project-fields">
-                  <form>
-                        <div class="row">
-                              <div class="col-lg-12">
-                                    <input type="text" name="title" placeholder="Title">
-                              </div>
-                              <div class="col-lg-12">
-                                    <div class="inp-field">
-                                          <select>
-                                                <option>Category</option>
-                                                <option>Category 1</option>
-                                                <option>Category 2</option>
-                                                <option>Category 3</option>
-                                          </select>
-                                    </div>
-                              </div>
-                              <div class="col-lg-12">
-                                    <input type="text" name="skills" placeholder="Skills">
-                              </div>
-                              <div class="col-lg-12">
-                                    <div class="price-sec">
-                                          <div class="price-br">
-                                                <input type="text" name="price1" placeholder="Price">
-                                                <i class="la la-dollar"></i>
-                                          </div>
-                                          <span>To</span>
-                                          <div class="price-br">
-                                                <input type="text" name="price1" placeholder="Price">
-                                                <i class="la la-dollar"></i>
-                                          </div>
-                                    </div>
-                              </div>
-                              <div class="col-lg-12">
-                                    <textarea name="description" placeholder="Description"></textarea>
-                              </div>
-                              <div class="col-lg-12">
-                                    <ul>
-                                          <li><button class="active" type="submit" value="post">Post</button></li>
-                                          <li><a href="#" title="">Cancel</a></li>
-                                    </ul>
-                              </div>
-                        </div>
-                  </form>
-            </div><
-            <a href="#" title=""><i class="la la-times-circle-o"></i></a>
-      </div>
-</div> -->
-<!--post-project-popup project end-->
-<!-- <div class="post-popup job_post">
-      <div class="post-project">
-            <h3>Post a job</h3>
-            <div class="post-project-fields">
-                  <form>
-                        <div class="row">
-                              <div class="col-lg-12">
-                                    <input type="text" name="title" placeholder="Title">
-                              </div>
-                              <div class="col-lg-12">
-                                    <div class="inp-field">
-                                          <select>
-                                                <option>Category</option>
-                                                <option>Category 1</option>
-                                                <option>Category 2</option>
-                                                <option>Category 3</option>
-                                          </select>
-                                    </div>
-                              </div>
-                              <div class="col-lg-12">
-                                    <input type="text" name="skills" placeholder="Skills">
-                              </div>
-                              <div class="col-lg-6">
-                                    <div class="price-br">
-                                          <input type="text" name="price1" placeholder="Price">
-                                          <i class="la la-dollar"></i>
-                                    </div>
-                              </div>
-                              <div class="col-lg-6">
-                                    <div class="inp-field">
-                                          <select>
-                                                <option>Full Time</option>
-                                                <option>Half time</option>
-                                          </select>
-                                    </div>
-                              </div>
-                              <div class="col-lg-12">
-                                    <textarea name="description" placeholder="Description"></textarea>
-                              </div>
-                              <div class="col-lg-12">
-                                    <ul>
-                                          <li><button class="active" type="submit" value="post">Post</button></li>
-                                          <li><a href="#" title="">Cancel</a></li>
-                                    </ul>
-                              </div>
-                        </div>
-                  </form>
-            </div>
-            <a href="#" title=""><i class="la la-times-circle-o"></i></a>
-      </div>
-</div> -->
-<!--post-project-popup job end-->
-
 
 @endsection

@@ -66,7 +66,18 @@
                         </div>
                     </div>
                     
+                    <nav style="margin-right:10px;transform:translateY(2px);">
+						<ul>
+                            <li>
+                                <a href="/messagerie" title="" class="not-box-open" style="font-size:14px;">
+                                    <span><img src="images/icon6.png" alt="" style="width: 18px; height:12px; "></span>
+                                    Messagerie
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                     
+
                     <!--menu-btn end-->
                     @if (Auth::user())
                        <div class="user-account" style="width:160px;display:flex;flex-direction:row;justify-content:space-between;align-items:center;border:0;">

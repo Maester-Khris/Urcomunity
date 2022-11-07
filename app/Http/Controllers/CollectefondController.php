@@ -93,7 +93,7 @@ class CollectefondController extends Controller
          $fund = Collectefond::find($request->collecte);
          $event = Evenement::find($fund->evenement_id);
          $membre = Membre::where('matricule',$request->membre_matricule)->first();
-         $result = $this->eventservice->checkMemberEligibleForFund($membre, $event, $fund);
+         $result = $this->eventservice->checkMemberEligibleForFundParticipation($membre, $event, $fund);
 
          if($fund->statut == 'En cours'){
             if($result == "11" || $result == "12"){
@@ -101,18 +101,11 @@ class CollectefondController extends Controller
                   'membre_id' => $membre->id,
                   'collectefond_id' => $fund->id
                ]); 
-               if($result== "11"){
-                  $membre->partcipation_heureuse = $membre->partcipation_heureuse + 1;
-               }
-               if($result== "12"){
-                  $membre->partcipation_malheureuse = $membre->partcipation_malheureuse + 1;
-               }
+               $result == "11" ? $membre->partcipation_heureuse = $membre->partcipation_heureuse + 1 : null;
+               $result == "12" ? $membre->partcipation_malheureuse = $membre->partcipation_malheureuse + 1 : null;
+              
                $membre->save();
                return redirect('/site-managment');
-            }
-            else if($result== "01" || $result== "02"){
-               $collect_error = "Désolé, ce membre n'est pas eligble, veuillez respecter les criteres";
-               return back()->with('error_menu',$collect_error);
             }else{
                $collect_error = "Désolé, ce membre est desactivé ou a déja participé";
                return back()->with('error_menu',$collect_error);

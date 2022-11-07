@@ -17,8 +17,8 @@ Route::get('policy', function () {
     return view('policy');
     // dd("entrer");
 });
-Route::get('accueil','App\Http\Controllers\AccueilController@index');
-Route::get('site-managment','App\Http\Controllers\AdministrationController@index')->middleware('admin');;
+Route::get('accueil','App\Http\Controllers\AccueilController@index')->name('accueil');
+Route::get('site-managment','App\Http\Controllers\AdministrationController@index')->middleware('admin');
 Route::get('membres-voir','App\Http\Controllers\MembreProfileController@index');
 Route::get('contact','App\Http\Controllers\MembreProfileController@delegues');
 Route::get('zones-voir','App\Http\Controllers\ZoneController@index');
@@ -27,9 +27,14 @@ Route::get('evts-details/{event}','App\Http\Controllers\EventController@voir')->
 
 Route::get('collectes','App\Http\Controllers\CollectefondController@index');
 
-Route::get('connexion', function () {
-    return view('auth.login');
-});
+// Route::get('connexion', function () {
+//     
+// });
+
+Route::get('messagerie','App\Http\Controllers\MessagerieController@index')->middleware('chatroom');
+Route::get('loadMessage','App\Http\Controllers\MessagerieController@getMessages');
+Route::post('sendMessage','App\Http\Controllers\MessagerieController@pushMessage');
+
 
 //=========== Membre ============
 Route::post('ajouter-zone','App\Http\Controllers\ZoneController@create');
@@ -51,6 +56,7 @@ Route::post('mixer-collecte','App\Http\Controllers\CollectefondController@mixeve
 Route::post('nouvelle-participation','App\Http\Controllers\CollectefondController@addparticipationforfund');
 
 //=========== Connexion ============
+Route::get('connexion','App\Http\Controllers\UserController@loginpage');
 Route::post('login','App\Http\Controllers\UserController@connect');
 Route::post('logout','App\Http\Controllers\UserController@deconnect');
 

@@ -10,6 +10,7 @@ use App\Models\Evenement;
 use App\Models\Collectefond;
 use App\Models\Participantcollecte;
 use Spatie\Permission\Models\Role;
+use \StdClass;
 
 use Illuminate\Support\Facades\DB;
 use Date;
@@ -57,6 +58,23 @@ class AdministrationController extends Controller
       return $membres;
    }
 
+   public function getMembersWithParticipation($membres){
+      $results = collect();
+      // $collectes =  Collectefond::all();
+      $collectes =  Collectefond::latest()->take(6)->get();
+      foreach($membres as $mbre){
+         $participation = [];
+         foreach($collectes as $key => $collecte){
+            $if_participate = Participantcollecte::where("membre_id",$mbre->id)->where("collectefond_id",$collecte->id)->exists();
+            $participation[$key] = $if_participate == true ? 1 : 0;
+         }
+         $mem = new \stdClass();
+         $mem->membre = $mbre;
+         $mem->participations = $participation;
+         $results->push($mem);
+      }
+      return $results;
+   }
 
 
    /** NOTE
@@ -72,6 +90,7 @@ class AdministrationController extends Controller
       $bureaux = Role::where('name','LIKE','B%')->select("name")->get();
       $sages = Role::where('name','LIKE','C%')->select("name")->get();
       $membres = Membre::with('user')->whereNotNull('zone_id')->where('name','!=','Fire Admin')->get();
+      $membrewithpartici = $this->getMembersWithParticipation($membres);
       $events = Evenement::with('membre')->whereNull('date_acceptation')->get();
       $collecte_en_cour = Collectefond::with('evenement')->where('statut','En Cours')->first();
       $collectes = Collectefond::where('statut','En cours')->get();
@@ -100,7 +119,8 @@ class AdministrationController extends Controller
          ->with(compact('villages'))
          ->with(compact('bureaux'))
          ->with(compact('sages'))
-         ->with(compact('membres'))
+         ->with(compact('membres'))  
+         ->with(compact('membrewithpartici'))
          ->with(compact('events'))
          ->with(compact('collecte_en_cour'))
          ->with(compact('collectes'))
